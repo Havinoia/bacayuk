@@ -35,10 +35,10 @@ export default async function DashboardPage() {
             Temukan ribuan cerita seru dan dongeng mendidik yang akan menemanimu setiap hari.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button className="btn-primary">Mulai Membaca</button>
-            <button className="px-6 py-3 rounded-2xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+            <Link href="/dashboard/collections" className="btn-primary">Mulai Membaca</Link>
+            <Link href="/dashboard/collections" className="px-6 py-3 rounded-2xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
               Lihat Kategori
-            </button>
+            </Link>
           </div>
         </div>
         

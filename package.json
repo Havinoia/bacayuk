@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:push": "npx drizzle-kit push",
+    "db:seed": "npx tsx scripts/seed.ts",
+    "db:setup": "npx tsx scripts/create-db.ts",
+    "db:studio": "npx drizzle-kit studio"
   },
   "dependencies": {
     "better-auth": "^1.6.0",

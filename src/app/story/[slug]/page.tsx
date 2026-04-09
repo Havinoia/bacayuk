@@ -1,30 +1,27 @@
 import Link from "next/link";
 import { ArrowLeft, Lock, Unlock, Speaker } from "lucide-react";
 
-// Mock story data (in real app, this would be from DB)
-const STORIES: Record<string, any> = {
-  "kancil-dan-buaya": {
-    title: "Kancil dan Buaya yang Cerdik",
-    category: "Fabel",
-    preview: "Di sebuah hutan yang lebat, hiduplah seekor Kancil yang sangat pintar. Pada suatu hari, Kancil ingin menyeberangi sungai untuk memakan mentimun di seberang sana.",
-    fullContent: "Di sebuah hutan yang lebat, hiduplah seekor Kancil yang sangat pintar. Pada suatu hari, Kancil ingin menyeberangi sungai untuk memakan mentimun di seberang sana. Namun, sungai itu penuh dengan buaya yang lapar. Kancil pun berpikir keras. Ia berteriak memanggil buaya, 'Hai Buaya! Raja Hutan ingin menghitung jumlah kalian untuk memberi hadiah!' Buaya pun berkumpul dan berbaris. Kancil melompat dari satu punggung buaya ke punggung lainnya sambil menghitung, hingga akhirnya sampai di seberang sungai. Sambil tertawa, Kancil berteriak, 'Terima kasih Buaya-buaya bodoh! Aku sudah sampai!' Buaya pun merasa kesal namun Kancil sudah lari menjauh.",
-    color: "bg-blue-500",
-  },
-  "danau-toba": {
-    title: "Asal usul Danau Toba",
-    category: "Legenda",
-    preview: "Dahulu kala, ada seorang pemuda bernama Toba yang hobi memancing. Suatu hari ia menangkap ikan emas besar yang berubah menjadi wanita cantik.",
-    fullContent: "Dahulu kala, ada seorang pemuda bernama Toba yang hobi memancing. Suatu hari ia menangkap ikan emas besar yang berubah menjadi wanita cantik. Wanita itu adalah putri yang dikutuk. Toba menikahinya dengan janji tidak akan pernah menyebut asal-usulnya. Mereka memiliki anak bernama Samosir. Suatu hari Samosir menghabiskan bekal ayahnya, Toba marah dan berteriak 'Dasar anak ikan!'. Langit mendung, hujan turun tiada henti, dan desa tenggelam menjadi Danau Toba, sementara tengahnya menjadi Pulau Samosir.",
-    color: "bg-emerald-500",
-  }
-};
+import { db } from "@/db";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { eq } from "drizzle-orm";
+import { stories } from "@/db/schema";
 
 export default async function StoryPage({ params }: { params: { slug: string } }) {
   const { slug } = await params;
-  const story = STORIES[slug];
   
-  // Mock session check (In real app: const session = await auth.api.getSession({ headers: await headers() }))
-  const isLoggedIn = false; // Toggle to test logic
+  const story = await db.query.stories.findFirst({
+    where: eq(stories.slug, slug),
+    with: {
+        category: true
+    }
+  });
+  
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  
+  const isLoggedIn = !!session;
 
   if (!story) {
     return <div className="p-20 text-center font-black">Cerita tidak ditemukan!</div>;
@@ -42,7 +39,7 @@ export default async function StoryPage({ params }: { params: { slug: string } }
         <header className="space-y-6">
           <div className="flex items-center gap-4">
             <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest leading-none">
-              {story.category}
+              {story.category?.name}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-foreground leading-[1.1]">
@@ -57,7 +54,7 @@ export default async function StoryPage({ params }: { params: { slug: string } }
         <div className={`p-8 md:p-12 rounded-[2.5rem] bg-white shadow-2xl shadow-black/5 border border-black/5 relative overflow-hidden`}>
           <div className="prose prose-slate max-w-none">
             <p className="text-2xl md:text-3xl font-serif leading-relaxed text-foreground/80 selection:bg-primary/20">
-              {isLoggedIn ? story.fullContent : story.preview}
+              {isLoggedIn ? story.content : story.preview}
             </p>
           </div>
 

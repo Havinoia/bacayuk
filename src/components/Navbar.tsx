@@ -1,7 +1,20 @@
+"use client";
+
 import Link from "next/link";
-import { BookOpen, User, LogIn, Menu } from "lucide-react";
+import { BookOpen, User, LogIn, Menu, LogOut, Loader2 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
+  const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push("/auth/login");
+    router.refresh();
+  };
+
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md border-b border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,15 +32,32 @@ export function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <Link href="/dashboard" className="text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Semua Cerita</Link>
-            <Link href="/dashboard?cat=fabel" className="text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Fabel</Link>
-            <Link href="/dashboard?cat=legenda" className="text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Legenda</Link>
             
             <div className="h-6 w-px bg-black/10 mx-2" />
             
-            <Link href="/auth/login" className="btn-primary py-2 px-6 flex items-center gap-2 text-sm">
-              <LogIn size={18} />
-              Masuk
-            </Link>
+            {isPending ? (
+                 <Loader2 className="animate-spin text-primary" size={20} />
+            ) : session ? (
+                <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-primary">
+                            <User size={16} />
+                        </div>
+                        <span className="text-sm font-bold text-foreground">{session.user.name}</span>
+                    </div>
+                    <button 
+                        onClick={handleSignOut}
+                        className="text-sm font-bold text-red-500 hover:text-red-600 flex items-center gap-2 transition-colors"
+                    >
+                        <LogOut size={18} /> Keluar
+                    </button>
+                </div>
+            ) : (
+                <Link href="/auth/login" className="btn-primary py-2 px-6 flex items-center gap-2 text-sm font-bold">
+                    <LogIn size={18} />
+                    Masuk
+                </Link>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}

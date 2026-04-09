@@ -42,44 +42,49 @@ export default async function CollectionsPage({
   });
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-16 pb-20 pt-10 min-h-screen relative">
+      {/* Decorative Background Fillers */}
+      <div className="absolute top-20 right-1/4 text-5xl opacity-10 animate-pulse">☁️</div>
+      <div className="absolute top-[400px] left-10 text-6xl opacity-10 animate-float">🍄</div>
+      <div className="absolute bottom-20 right-10 text-6xl opacity-10 animate-float" style={{ animationDelay: '2s' }}>🌷</div>
+
       {/* Header Section */}
-      <header className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
-              Koleksi <span className="text-primary">Cerita</span>
+      <header className="space-y-10 relative z-10 px-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-none">
+              Jelajah <span className="text-primary italic">Ajaib</span>
             </h1>
-            <p className="text-foreground/40 font-medium max-w-lg">
-              Jelajahi berbagai kisah menarik dari seluruh penjuru dunia untuk menemani imajinasimu.
+            <p className="text-foreground/40 font-bold max-w-lg text-lg">
+              Temukan ribuan rahasia dan petualangan yang menunggumu untuk dibaca.
             </p>
           </div>
           
-          <Suspense fallback={<div className="h-14 w-[300px] bg-slate-100 animate-pulse rounded-2xl" />}>
+          <Suspense fallback={<div className="h-16 w-[350px] bg-white animate-pulse rounded-full" />}>
             <SearchInput />
           </Suspense>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3 pt-4">
+        <div className="flex flex-wrap items-center gap-4">
           <Link 
             href="/dashboard/collections"
-            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all border ${
+            className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 ${
               !selectedCatId 
-                ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
-                : "bg-white text-foreground/40 border-black/5 hover:border-primary/20 hover:text-primary"
+                ? "bg-primary text-white shadow-primary/30 -rotate-2" 
+                : "bg-white text-foreground/40 hover:text-primary hover:bg-primary/5"
             }`}
           >
-            Semua
+            Semua Cerita
           </Link>
-          {allCategories.map((cat) => (
+          {allCategories.map((cat, idx) => (
             <Link 
               key={cat.id}
               href={`/dashboard/collections?cat=${cat.id}`}
-              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all border ${
+              className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 ${
                 selectedCatId === cat.id 
-                  ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
-                  : "bg-white text-foreground/40 border-black/5 hover:border-primary/20 hover:text-primary"
+                  ? "bg-secondary text-white shadow-secondary/30 rotate-2" 
+                  : "bg-white text-foreground/40 hover:text-secondary hover:bg-secondary/5"
               }`}
             >
               {cat.name}
@@ -89,57 +94,61 @@ export default async function CollectionsPage({
       </header>
 
       {/* Grid Section */}
+      <div className="relative z-10">
       {allStories.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {allStories.map((story) => (
             <Link 
               key={story.id} 
               href={`/story/${story.slug}`} 
-              className="group relative flex flex-col bg-white rounded-[2.5rem] border border-black/5 shadow-sm hover:shadow-2xl hover:shadow-black/5 transition-all duration-500 overflow-hidden"
+              className="group"
             >
-              <div className={`aspect-[16/10] w-full ${COLOR_MAP[story.category?.name || "default"]} relative p-8 flex items-end overflow-hidden`}>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
-                
-                {/* Decorative icon backdrop */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-700">
-                    <BookOpen size={180} strokeWidth={1} className="text-white" />
+              <div className="bubble-card flex flex-col h-full hover:shadow-primary/10 transition-all duration-500">
+                <div className={`aspect-[16/10] w-full ${COLOR_MAP[story.category?.name || "default"]} relative p-8 flex items-end overflow-hidden`}>
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  {/* Decorative icon backdrop */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
+                      <BookOpen size={200} strokeWidth={1} className="text-white" />
+                  </div>
+
+                  <div className="relative z-10 w-full flex justify-between items-center text-white">
+                      <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-black uppercase tracking-widest border border-white/20">
+                          {story.category?.name}
+                      </span>
+                      <div className="w-12 h-12 rounded-2xl bg-white text-primary flex items-center justify-center shadow-xl group-hover:scale-110 transition-all">
+                          <ArrowRight size={24} strokeWidth={4} />
+                      </div>
+                  </div>
                 </div>
 
-                <div className="relative z-10 w-full flex justify-between items-center text-white">
-                    <span className="px-3 py-1 rounded-lg bg-white/20 backdrop-blur-md text-[10px] font-black uppercase tracking-wider">
-                        5 Menit Baca
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-white group-hover:text-primary transition-all duration-300">
-                        <ArrowRight size={18} />
-                    </div>
+                <div className="p-8 space-y-4 bg-white border-t-4 border-black/5">
+                  <h3 className="text-2xl font-black text-foreground group-hover:text-primary transition-colors leading-tight">
+                    {story.title}
+                  </h3>
+                  <p className="text-foreground/40 text-sm line-clamp-2 leading-relaxed font-bold">
+                    {story.preview}
+                  </p>
                 </div>
-              </div>
-
-              <div className="p-8 space-y-4">
-                <span className="text-xs font-black text-primary uppercase tracking-widest block">
-                  {story.category?.name || "Umum"}
-                </span>
-                <h3 className="text-2xl font-black text-foreground group-hover:text-primary transition-colors leading-tight">
-                  {story.title}
-                </h3>
-                <p className="text-foreground/40 text-sm line-clamp-2 leading-relaxed font-medium">
-                  {story.preview}
-                </p>
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="py-20 text-center space-y-4">
-            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-300">
-                <BookOpen size={32} />
+        <div className="py-32 text-center space-y-8 bg-white/50 backdrop-blur-sm rounded-[3rem] border-4 border-dashed border-black/5">
+            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto text-primary shadow-xl animate-float">
+                <BookOpen size={40} />
             </div>
-            <div className="space-y-1">
-                <h3 className="text-xl font-bold text-foreground">Belum ada cerita</h3>
-                <p className="text-foreground/40 text-sm">Coba cari di kategori yang berbeda ya!</p>
+            <div className="space-y-2">
+                <h3 className="text-3xl font-black text-foreground italic">Oops! Alamatnya Salah...</h3>
+                <p className="text-foreground/40 font-bold">Belum ada cerita ajaib di sini. Coba cari petualangan lain ya!</p>
             </div>
+            <Link href="/dashboard/collections" className="inline-block btn-primary">
+               Lihat Koleksi Lain
+            </Link>
         </div>
       )}
+      </div>
     </div>
   );
 }

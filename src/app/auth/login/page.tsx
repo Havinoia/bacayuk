@@ -37,90 +37,91 @@ export default function LoginPage() {
         }
     };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-            <div className="w-full max-w-md">
-                {/* Logo / Brand */}
-                <div className="text-center mb-10">
-                    <Link href="/" className="inline-block mb-6">
-                         <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-primary/20">
-                            B
-                         </div>
-                    </Link>
-                    <h1 className="text-3xl font-black text-foreground mb-2">Selamat Datang Kembali!</h1>
-                    <p className="text-foreground/40 font-medium">Masuk untuk melanjutkan petualangan membacamu.</p>
-                </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#fffef0] relative overflow-hidden">
+        {/* Background Decorations for "No Empty Space" */}
+        <div className="absolute top-10 left-10 text-6xl opacity-10 floating-element animate-float">🍭</div>
+        <div className="absolute top-1/2 -left-10 text-8xl opacity-10 floating-element animate-float">🚀</div>
+        <div className="absolute bottom-10 right-10 text-6xl opacity-10 floating-element animate-float">🏰</div>
+        <div className="absolute top-20 right-20 text-7xl opacity-10 floating-element animate-float" style={{ animationDelay: '1s' }}>⭐</div>
 
-                <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-black/5 border border-black/5">
-                    <form onSubmit={handleLogin} className="space-y-6">
-                        {error && (
-                            <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm font-bold border border-red-100 italic">
-                                {error}
-                            </div>
-                        )}
-
-                        <div className="space-y-2">
-                             <label className="text-xs font-black uppercase tracking-widest text-foreground/30 px-2">Alamat Email</label>
-                             <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
-                                <input 
-                                    type="email" 
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="nama@email.com"
-                                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white outline-none transition-all font-bold"
-                                />
-                             </div>
-                        </div>
-
-                        <div className="space-y-2">
-                             <label className="text-xs font-black uppercase tracking-widest text-foreground/30 px-2">Kata Sandi</label>
-                             <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
-                                <input 
-                                    type="password" 
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white outline-none transition-all font-bold"
-                                />
-                             </div>
-                        </div>
-
-                        <button 
-                            type="submit" 
-                            disabled={loading}
-                            className="w-full btn-primary py-4 rounded-2xl flex items-center justify-center gap-2 group transition-all"
-                        >
-                            {loading ? (
-                                <Loader2 className="animate-spin" size={20} />
-                            ) : (
-                                <>
-                                    Masuk Sekarang <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-                                </>
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="mt-8 pt-8 border-t border-slate-100 space-y-6">
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
-                            <div className="relative flex justify-center text-xs uppercase tracking-widest font-black text-foreground/20"><span className="bg-white px-4">Atau Lewat</span></div>
-                        </div>
-                        
-                        <button className="w-full py-4 rounded-2xl bg-slate-50 border-2 border-transparent hover:border-slate-200 transition-all font-bold flex items-center justify-center gap-3 group">
-                            <Globe size={20} className="group-hover:scale-110 transition-transform" />
-                            <span>Lanjutkan dengan Google</span>
-                        </button>
+        <div className="w-full max-w-md relative z-10">
+            {/* Logo / Brand */}
+            <div className="text-center mb-10">
+                <Link href="/" className="inline-block mb-6 group">
+                    <div className="w-20 h-20 bg-primary rounded-[2rem] flex items-center justify-center text-white text-4xl font-black shadow-2xl shadow-primary/30 group-hover:rotate-12 transition-transform">
+                        B
                     </div>
-                </div>
-
-                <p className="text-center mt-8 text-foreground/40 font-bold">
-                    Belum punya akun? <Link href="/auth/register" className="text-primary hover:underline">Daftar Sekarang</Link>
-                </p>
+                </Link>
+                <h1 className="text-4xl md:text-5xl font-black text-foreground mb-3 tracking-tighter">Halo <span className="text-primary italic">Sahabat!</span></h1>
+                <p className="text-foreground/40 font-bold">Masuk ke duniamu untuk melanjutkan petualangan.</p>
             </div>
+
+            <div className="bg-white p-8 md:p-12 rounded-[3.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.05)] border-4 border-white">
+                <form onSubmit={handleLogin} className="space-y-8">
+                    {error && (
+                        <div className="p-5 rounded-3xl bg-red-50 text-red-600 text-sm font-black border-2 border-red-100 flex items-center gap-3 italic">
+                            <span>🛑</span> {error}
+                        </div>
+                    )}
+
+                    <div className="space-y-3">
+                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Alamat Email Kita</label>
+                         <div className="relative group">
+                            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
+                            <input 
+                                type="email" 
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="nama@email.com"
+                                className="w-full pl-14 pr-6 py-5 rounded-full bg-slate-50 border-4 border-transparent focus:border-primary/20 focus:bg-white outline-none transition-all font-black"
+                            />
+                         </div>
+                    </div>
+
+                    <div className="space-y-3">
+                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Kata Sandi Rahasia</label>
+                         <div className="relative group">
+                            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
+                            <input 
+                                type="password" 
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                                className="w-full pl-14 pr-6 py-5 rounded-full bg-slate-50 border-4 border-transparent focus:border-primary/20 focus:bg-white outline-none transition-all font-black"
+                            />
+                         </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className="w-full btn-primary py-5 text-xl flex items-center justify-center gap-3 group"
+                    >
+                        {loading ? (
+                            <Loader2 className="animate-spin" size={24} />
+                        ) : (
+                            <>
+                                ✨ Buka Pintu Petualangan ✨
+                            </>
+                        )}
+                    </button>
+                </form>
+
+                <div className="mt-10 pt-10 border-t-4 border-dashed border-slate-50 space-y-8">
+                    <button className="w-full py-5 rounded-full bg-slate-50 border-4 border-transparent hover:border-primary/10 transition-all font-black text-slate-600 flex items-center justify-center gap-3 group active:scale-95">
+                        <Globe size={20} className="group-hover:rotate-[30deg] transition-all" />
+                        <span>Gunakan Google</span>
+                    </button>
+                </div>
+            </div>
+
+            <p className="text-center mt-10 text-foreground/40 font-black">
+                Belum punya kunci? <Link href="/auth/register" className="text-primary hover:underline italic">Daftar di Sini!</Link>
+            </p>
         </div>
-    );
+    </div>
+);
 }

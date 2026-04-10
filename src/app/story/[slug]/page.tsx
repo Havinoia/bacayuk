@@ -48,13 +48,13 @@ export default async function StoryPage({ params }: { params: { slug: string } }
               </span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-black text-slate-800 leading-[1.1] tracking-tight drop-shadow-sm">
+            <h1 className="text-5xl md:text-7xl font-black font-header text-slate-800 leading-[1.1] tracking-tight drop-shadow-sm">
                 <span className="text-primary inline-block hover:scale-110 transition-transform cursor-default">
                     {story.title}
                 </span>
             </h1>
             
-            <div className="flex items-center justify-center gap-3 text-sm font-bold text-slate-400 italic">
+            <div className="flex items-center justify-center gap-3 text-sm font-bold text-slate-400 italic font-sans">
               <div className="h-px w-8 bg-slate-200" />
               Diceritakan oleh Kakak Bacayuk
               <div className="h-px w-8 bg-slate-200" />
@@ -99,8 +99,8 @@ export default async function StoryPage({ params }: { params: { slug: string } }
                       <Lock size={32} strokeWidth={2.5} />
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-2xl md:text-3xl font-black text-slate-800">Ups! Ceritanya Masih Terkunci 🔐</h3>
-                      <p className="text-slate-400 font-bold max-w-sm mx-auto">
+                      <h3 className="text-2xl md:text-3xl font-black font-header text-slate-800 tracking-tight">Ups! Ceritanya Masih Terkunci 🔐</h3>
+                      <p className="text-slate-400 font-bold max-w-sm mx-auto leading-relaxed">
                         Ayo Masuk atau Daftar untuk mengikuti petualangan seru ini sampai akhir!
                       </p>
                     </div>

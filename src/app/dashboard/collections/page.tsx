@@ -52,10 +52,10 @@ export default async function CollectionsPage({
       <header className="space-y-10 relative z-10 px-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-none">
+            <h1 className="text-5xl md:text-7xl font-black font-header text-foreground tracking-tighter leading-none">
               Jelajah <span className="text-primary italic">Ajaib</span>
             </h1>
-            <p className="text-foreground/40 font-bold max-w-lg text-lg">
+            <p className="text-foreground/40 font-bold max-w-lg text-lg leading-relaxed">
               Temukan ribuan rahasia dan petualangan yang menunggumu untuk dibaca.
             </p>
           </div>
@@ -123,12 +123,15 @@ export default async function CollectionsPage({
                 </div>
 
                 <div className="p-8 space-y-4 bg-white border-t-4 border-black/5">
-                  <h3 className="text-2xl font-black text-foreground group-hover:text-primary transition-colors leading-tight">
+                  <h3 className="text-2xl font-black font-header text-foreground group-hover:text-primary transition-colors leading-tight">
                     {story.title}
                   </h3>
                   <p className="text-foreground/40 text-sm line-clamp-2 leading-relaxed font-bold">
                     {story.preview}
                   </p>
+                  <div className="pt-4 flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-widest leading-none">
+                    <Clock size={14} /> 5 MENIT BACA
+                  </div>
                 </div>
               </div>
             </Link>
@@ -140,7 +143,7 @@ export default async function CollectionsPage({
                 <BookOpen size={40} />
             </div>
             <div className="space-y-2">
-                <h3 className="text-3xl font-black text-foreground italic">Oops! Alamatnya Salah...</h3>
+                <h3 className="text-3xl font-black font-header text-foreground italic">Oops! Alamatnya Salah...</h3>
                 <p className="text-foreground/40 font-bold">Belum ada cerita ajaib di sini. Coba cari petualangan lain ya!</p>
             </div>
             <Link href="/dashboard/collections" className="inline-block btn-primary">

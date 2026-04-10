@@ -80,3 +80,19 @@ export const verification = pgTable("verification", {
 	createdAt: timestamp("createdAt").notNull(),
 	updatedAt: timestamp("updatedAt").notNull(),
 });
+
+// Heroes Table (User Roles/Stats)
+export const heroes = pgTable("heroes", {
+  id: serial("id").primaryKey(),
+  userId: text("userId").notNull().references(() => user.id).unique(),
+  role: text("role").default("default"), // dwarf, peri, kesatria, penyihir, pemanah
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const heroesRelations = relations(heroes, ({ one }) => ({
+  user: one(user, {
+    fields: [heroes.userId],
+    references: [user.id],
+  }),
+}));

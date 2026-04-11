@@ -5,10 +5,6 @@ import { db } from "../src/db/index";
 import { 
     categories as categoriesTable, 
     stories as storiesTable, 
-    user as userTable, 
-    account as accountTable, 
-    heroes as heroesTable, 
-    session as sessionTable,
     readingProgress as readingProgressTable
 } from "../src/db/schema";
 
@@ -17,10 +13,6 @@ async function main() {
 
     // Clear existing data (Order matters for FK constraints)
     await db.delete(readingProgressTable);
-    await db.delete(sessionTable);
-    await db.delete(heroesTable);
-    await db.delete(accountTable);
-    await db.delete(userTable);
     await db.delete(storiesTable);
     await db.delete(categoriesTable);
 
@@ -63,34 +55,6 @@ async function main() {
             thumbnailUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuAYKUEVKEeTstQ0TLIVdQu6KtEpBU_BMzDIKSjHWcSACco399MZNApjqmfHjl8kvOXI4v8EeP25sfayVsgfRcVZ6klwuRz22ZhiWmbxidCO2KpGD7ToL4_oIJ_d53z3ky4PvShPrSnZvp9nnPIr3NqQjoVue0RXP3SHhI8rhE1Aw0QNsoiNHgzd_Ep61X5CfAXWDBChq-STrnAnZhpXjExNNDT5OMHbea_R78vc2cT7YghHCpRqo47UzFyEculK1TYcQgWLs_p68-o"
         }
     ]);
-
-    console.log("Seeding users...");
-    // Insert test user
-    const [testUser] = await db.insert(userTable).values({
-        id: "user_test_pahlawan",
-        name: "Pahlawan Cilik",
-        email: "pahlawan@bacayuk.com",
-        emailVerified: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    }).returning();
-
-    // Insert linked account
-    await db.insert(accountTable).values({
-        id: "account_test_pahlawan",
-        userId: testUser.id,
-        accountId: "pahlawan@bacayuk.com",
-        providerId: "credential",
-        password: "$2a$10$m6kM9zCH.K27Z0.qK.0qK.0qK.0qK.0qK.0qK.0qK.0qK.0qK.0qK", 
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    });
-
-    // Insert linked hero record
-    await db.insert(heroesTable).values({
-        userId: testUser.id,
-        role: "kesatria",
-    });
 
     console.log("Seeding completed successfully!");
     process.exit(0);

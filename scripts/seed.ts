@@ -1,90 +1,99 @@
 import "dotenv/config";
 import { db } from "../src/db/index";
-import { categories, stories } from "../src/db/schema";
+import { categories, stories, user, account, heroes, session, readingProgress } from "../src/appDataDir/../src/db/schema"; // Fixed path if needed, but standard is relative
+
+// Note: Using standard relative paths for the script
+import { 
+    categories as categoriesTable, 
+    stories as storiesTable, 
+    user as userTable, 
+    account as accountTable, 
+    heroes as heroesTable, 
+    session as sessionTable,
+    readingProgress as readingProgressTable
+} from "../src/db/schema";
 
 async function main() {
     console.log("Seeding started...");
 
-    // Clear existing data
-    await db.delete(stories);
-    await db.delete(categories);
+    // Clear existing data (Order matters for FK constraints)
+    await db.delete(readingProgressTable);
+    await db.delete(sessionTable);
+    await db.delete(heroesTable);
+    await db.delete(accountTable);
+    await db.delete(userTable);
+    await db.delete(storiesTable);
+    await db.delete(categoriesTable);
+
+    console.log("Database cleared.");
 
     // Insert categories
-    const [fabelCat, legendaCat, dongengCat] = await db.insert(categories).values([
+    const [fabelCat, legendaCat, dongengCat] = await db.insert(categoriesTable).values([
         { name: "Fabel", description: "Cerita tentang hewan yang berperilaku seperti manusia." },
         { name: "Legenda", description: "Cerita rakyat yang dianggap benar-benar terjadi." },
         { name: "Dongeng", description: "Cerita khayalan atau fantasi yang penuh keajaiban." },
     ]).returning();
 
-    // Insert stories
-    await db.insert(stories).values([
+    // Insert 3 Premium Stories
+    await db.insert(storiesTable).values([
         {
             title: "Kancil dan Buaya yang Cerdik",
             slug: "kancil-dan-buaya",
             categoryId: fabelCat.id,
             preview: "Di sebuah hutan yang lebat, hiduplah seekor Kancil yang sangat pintar. Pada suatu hari, Kancil ingin menyeberangi sungai untuk memakan mentimun di seberang sana.",
-            content: "Di sebuah hutan yang lebat, hiduplah seekor Kancil yang sangat pintar. Pada suatu hari, Kancil ingin menyeberangi sungai untuk memakan mentimun di seberang sana. Namun, sungai itu penuh dengan buaya yang lapar. Kancil pun berpikir keras. Ia berteriak memanggil buaya, 'Hai Buaya! Raja Hutan ingin menghitung jumlah kalian untuk memberi hadiah!' Buaya pun berkumpul dan berbaris. Kancil melompat dari satu punggung buaya ke punggung lainnya sambil menghitung, hingga akhirnya sampai di seberang sungai. Sambil tertawa, Kancil berteriak, 'Terima kasih Buaya-buaya bodoh! Aku sudah sampai!' Buaya pun merasa kesal namun Kancil sudah lari menjauh.",
+            content: "Di sebuah hutan yang lebat, hiduplah seekor Kancil yang sangat pintar. Setiap hari ia mencari mentimun segar di kebun seberang sungai. Namun, sungai itu sangat deras dan penuh dengan buaya yang lapar.\n\nSuatu hari, Kancil mendapat ide cemerlang. Ia berdiri di pinggir sungai dan berseru, 'Hai Buaya! Raja Hutan ingin menghitung kalian untuk memberi hadiah pesta!' Buaya-buaya yang rakus itu pun segera berkumpul.\n\n'Berbarislah sampai ke seberang!' perintah Kancil. Buaya pun berbaris rapi. Kancil mulai melompat di atas punggung mereka sambil menghitung, 'Satu... dua... tiga...' hingga akhirnya ia sampai di seberang dengan selamat.\n\n'Terima kasih ya buaya bodoh! Aku hanya butuh bantuan kalian untuk menyeberang saja!' teriak Kancil sambil berlari menuju kebun mentimun favoritnya. Buaya-buaya itu hanya bisa menggeram menyesal.",
             status: "published",
+            thumbnailUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYWl3Gl4JWe4RgRQXQ_UJ-2St-XgDlTyfOv8_sAvTSKmip0mzJPoD0CfLbP-3OOCQc-n6vFthpcRr2tzKJUykFncreYpT854kiA9jXYLeGxbjoXZzOPNhffE5NaoWwa3zLx2iq_3kVuQJM5m13ZCO_fD0hd-DJH4B6Nf6pJdQVvKtoaRVSXUTa1cKX6vXABCCDM-5ImX3gxC7r5_QeXcl0S_WroNPWbckI3kfg87UpB2OivP0XI3p8LZSgjUK_JhOka3bNKr8Dz-Q"
         },
         {
-            title: "Asal usul Danau Toba",
+            title: "Asal Usul Danau Toba",
             slug: "danau-toba",
             categoryId: legendaCat.id,
             preview: "Dahulu kala, ada seorang pemuda bernama Toba yang hobi memancing. Suatu hari ia menangkap ikan emas besar yang berubah menjadi wanita cantik.",
-            content: "Dahulu kala, ada seorang pemuda bernama Toba yang hobi memancing. Suatu hari ia menangkap ikan emas besar yang berubah menjadi wanita cantik. Wanita itu adalah putri yang dikutuk. Toba menikahinya dengan janji tidak akan pernah menyebut asal-usulnya. Mereka memiliki anak bernama Samosir. Suatu hari Samosir menghabiskan bekal ayahnya, Toba marah dan berteriak 'Dasar anak ikan!'. Langit mendung, hujan turun tiada henti, dan desa tenggelam menjadi Danau Toba, sementara tengahnya menjadi Pulau Samosir.",
+            content: "Di Sumatera Utara, hiduplah seorang petani bernama Toba yang sangat rajin bekerja. Suatu sore, Toba pergi memancing dan mendapatkan seekor ikan mas yang sangat besar dan berkilauan.\n\nSaat dibawa pulang, tiba-tiba ikan itu berubah menjadi seorang wanita yang sangat cantik jelita. Wanita itu berterima kasih karena Toba telah membebaskannya dari kutukan. Mereka akhirnya menikah dengan satu syarat: Toba tidak boleh membocorkan asal-usul istrinya yang seekor ikan.\n\nBeberapa tahun kemudian, lahirlah Samosir. Samosir tumbuh menjadi anak yang nakal. Suatu hari, Samosir menghabiskan bekal makan siang ayahnya. Toba yang marah besar tak sengaja berteriak, 'Dasar anak ikan!'\n\nSeketika itu juga, langit menjadi gelap dan hujan turun sangat lebat. Seluruh desa tenggelam menjadi danau besar yang kini kita kenal sebagai Danau Toba, dan di tengahnya terdapat pulau kecil bernama Pulau Samosir.",
             status: "published",
+            thumbnailUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuA48-QFJTjN7M3XWVTQqDmlgjLdryrxfZ4nJVk9Z3CgQG-tUJqQk4T54IdP1C1f-8E90rY9o3-QBUHtnb5PnLB2_1uvUzLLENtf0kIeb2GAMNEb5OOOsJY1NRbcYFAUpMCV8OZ7QEyLPZipLAX1Ebbdsjs_zoO9MxEiJ5HjTVpQ1UreHHq1dqdNzFJRtqtAagLiy0gMPwNOsr0UPfPLclnMd4xQXOTdicL45ikidreDix45oMbYF_4tcGWYdtp_pIbN56qgMYf93IA"
         },
         {
             title: "Bawang Merah dan Bawang Putih",
             slug: "bawang-merah-putih",
             categoryId: dongengCat.id,
-            preview: "Dua kakak beradik yang memiliki sifat berbeda. Bawang Putih yang baik hati dan Bawang Merah yang pemalas dan sombong.",
-            content: "Dahulu kala di sebuah desa, hiduplah Bawang Putih yang rajin dan baik hati. Ia tinggal bersama ibu tiri dan saudara tirinya, Bawang Merah, yang sangat nakal. Suatu hari, kain kesayangan ibunya hanyut ke sungai. Bawang Putih mencarinya hingga bertemu seorang nenek tua yang ramah. Sebagai ucapan terima kasih karena dibantu, nenek itu memberi hadiah dua buah labu. Saat dibelah di rumah, labu milik Bawang Putih berisi perhiasan mewah, sementara labu milik Bawang Merah berisi ular karena ia tidak sopan pada nenek tersebut.",
+            preview: "Kisah dua kakak beradik yang memiliki sifat berbeda. Bawang Putih yang baik hati dan Bawang Merah yang pemalas dan sombong.",
+            content: "Dahulu kala di sebuah desa, hiduplah dua orang gadis bernama Bawang Merah dan Bawang Putih. Bawang Putih adalah gadis yang rajin dan rendah hati, sedangkan Bawang Merah sangat malas dan manja oleh ibunya.\n\nSuatu hari, Bawang Putih sedang mencuci baju di sungai dan sebuah kain kesayangan ibunya hanyut. Ia mencari kain itu sampai bertemu seorang nenek tua di dalam gua. Sang nenek akan mengembalikan kain itu jika Bawang Putih mau membantunya membersihkan gua.\n\nBawang Putih membantu dengan senang hati. Sebagai hadiah, nenek memberinya sebuah labu. Saat sampai di rumah dan membelahnya, ternyata labu itu berisi banyak sekali emas dan berlian!\n\nBawang Merah yang iri kemudian sengaja menghanyutkan kain dan menghampiri nenek tersebut. Namun karena sifatnya yang sombong dan tidak mau bekerja, nenek memberinya labu yang berbeda. Saat dibelah, labu milik Bawang Merah justru berisi ular dan kalajengking sebagai balasan atas ketidaksetiaannya.",
             status: "published",
-        },
-        {
-            title: "Timun Mas",
-            slug: "timun-mas",
-            categoryId: dongengCat.id,
-            preview: "Kisah seorang gadis pemberani yang berusaha melarikan diri dari kejaran Raksasa jahat menggunakan kantong ajaib.",
-            content: "Mbok Srini sangat mendambakan seorang anak. Ia bertemu Raksasa yang memberinya biji timun ajaib. Dari timun besar itu, lahirnya bayi cantik bernama Timun Mas. Namun, Raksasa meminta Timun Mas dikembalikan saat sudah besar. Mbok Srini memberi Timun Mas empat kantong ajaib: garam, cabai, jarum, dan terasi. Saat dikejar Raksasa, garam menjadi lautan, cabai menjadi semak berduri, jarum menjadi hutan bambu, dan terasi menjadi lumpur mendidih yang akhirnya menenggelamkan Raksasa tersebut.",
-            status: "published",
-        },
-        {
-            title: "Malin Kundang",
-            slug: "malin-kundang",
-            categoryId: legendaCat.id,
-            preview: "Kisah seorang anak yang merantau dan menjadi kaya, namun ia melupakan dan durhaka kepada ibunya sendiri.",
-            content: "Malin Kundang adalah pemuda miskin yang merantau untuk mengubah nasib. Bertahun-tahun kemudian, ia kembali ke desanya sebagai saudagar kaya dengan kapal besar dan istri cantik. Ketika ibunya yang tua dan miskin menyambutnya, Malin merasa malu dan mengusirnya. Merasa sangat sedih, ibunya berdoa memohon keadilan. Seketika langit gelap, badai besar menghantam kapal Malin, dan Malin Kundang dikutuk menjadi batu sebagai peringatan bagi anak-anak yang durhaka.",
-            status: "published",
-        },
-        {
-            title: "Lutung Kasarung",
-            slug: "lutung-kasarung",
-            categoryId: dongengCat.id,
-            preview: "Pangeran yang dikutuk menjadi kera dan turun ke bumi untuk menemukan cinta sejatinya, Putri Purbasari.",
-            content: "Lutung Kasarung adalah seekor kera yang sebenarnya adalah seorang pangeran dari khayangan. Ia turun ke bumi untuk membantu Putri Purbasari yang diusir dari istana oleh kakaknya yang iri, Purbararang. Berkat kesabaran dan kebaikan hati Purbasari, Lutung Kasarung akhirnya berubah kembali menjadi pangeran tampan. Mereka berdua pun memerintah kerajaan dengan bijaksana, sementara kakaknya yang jahat mendapatkan balasan atas perbuatannya.",
-            status: "published",
-        },
-        {
-            title: "Sangkuriang",
-            slug: "sangkuriang",
-            categoryId: legendaCat.id,
-            preview: "Kisah terciptanya Gunung Tangkuban Perahu karena kegagalan Sangkuriang memenuhi syarat mustahil Dayang Sumbi.",
-            content: "Sangkuriang jatuh cinta pada Dayang Sumbi tanpa tahu bahwa ia adalah ibunya sendiri. Dayang Sumbi yang menyadari hal itu memberikan syarat mustahil: Sangkuriang harus membendung sungai Citarum dan membuat perahu besar dalam satu malam. Hampir berhasil dengan bantuan makhluk halus, Dayang Sumbi menipu Sangkuriang agar fajar datang lebih cepat. Marah karena gagal, Sangkuriang menendang perahu buatannya hingga terbalik dan menjadi Gunung Tangkuban Perahu.",
-            status: "published",
-        },
-        {
-            title: "Gajah yang Baik Hati",
-            slug: "gajah-baik-hati",
-            categoryId: fabelCat.id,
-            preview: "Gajah bertubuh besar itu selalu menolong teman-temannya di hutan yang sedang mengalami kesulitan.",
-            content: "Gajah bertubuh besar itu selalu menolong teman-temannya di hutan yang sedang mengalami kesulitan. Suatu hari, seekor kancil terjebak di dalam lubang yang cukup dalam. Gajah yang kebetulan lewat mendengar teriakan kancil. Tanpa ragu, gajah menggunakan belalainya yang kuat untuk mengangkat kancil keluar dari lubang tersebut. Kancil merasa sangat bersyukur dan berjanji akan membantu gajah jika gajah membutuhkan bantuan di masa depan.",
-            status: "published",
+            thumbnailUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuAYKUEVKEeTstQ0TLIVdQu6KtEpBU_BMzDIKSjHWcSACco399MZNApjqmfHjl8kvOXI4v8EeP25sfayVsgfRcVZ6klwuRz22ZhiWmbxidCO2KpGD7ToL4_oIJ_d53z3ky4PvShPrSnZvp9nnPIr3NqQjoVue0RXP3SHhI8rhE1Aw0QNsoiNHgzd_Ep61X5CfAXWDBChq-STrnAnZhpXjExNNDT5OMHbea_R78vc2cT7YghHCpRqo47UzFyEculK1TYcQgWLs_p68-o"
         }
     ]);
 
-    console.log("Seeding completed successfully with new Fairy Tales!");
+    console.log("Seeding users...");
+    // Insert test user
+    const [testUser] = await db.insert(userTable).values({
+        id: "user_test_pahlawan",
+        name: "Pahlawan Cilik",
+        email: "pahlawan@bacayuk.com",
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    }).returning();
+
+    // Insert linked account
+    await db.insert(accountTable).values({
+        id: "account_test_pahlawan",
+        userId: testUser.id,
+        accountId: "pahlawan@bacayuk.com",
+        providerId: "credential",
+        password: "$2a$10$m6kM9zCH.K27Z0.qK.0qK.0qK.0qK.0qK.0qK.0qK.0qK.0qK.0qK", 
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    });
+
+    // Insert linked hero record
+    await db.insert(heroesTable).values({
+        userId: testUser.id,
+        role: "kesatria",
+    });
+
+    console.log("Seeding completed successfully!");
     process.exit(0);
 }
 

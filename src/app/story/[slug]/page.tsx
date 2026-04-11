@@ -4,8 +4,9 @@ import { ArrowLeft, Lock, Unlock, Speaker, BookOpen } from "lucide-react";
 import { db } from "@/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq } from "drizzle-orm";
-import { stories } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
+import { stories, readingProgress } from "@/db/schema";
+import { MarkAsFinished } from "@/components/MarkAsFinished";
 
 export default async function StoryPage({ params }: { params: { slug: string } }) {
   const { slug } = await params;
@@ -22,6 +23,14 @@ export default async function StoryPage({ params }: { params: { slug: string } }
   });
   
   const isLoggedIn = !!session;
+  
+  // Fetch reading progress if logged in
+  const progress = (isLoggedIn && story) ? await db.query.readingProgress.findFirst({
+    where: and(
+        eq(readingProgress.userId, session.user.id),
+        eq(readingProgress.storyId, story.id)
+    )
+  }) : null;
 
   if (!story) {
     return <div className="p-20 text-center font-black">Cerita tidak ditemukan!</div>;
@@ -113,13 +122,28 @@ export default async function StoryPage({ params }: { params: { slug: string } }
               )}
 
               {isLoggedIn && (
-                <div className="mt-16 pt-10 border-t-2 border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6">
-                   <div className="flex items-center gap-3 text-emerald-500 font-black text-sm md:text-base bg-emerald-50 px-5 py-2.5 rounded-2xl border border-emerald-100">
-                      <Unlock size={20} /> Cerita Berhasil Dibuka!
+                <div className="mt-16 pt-10 border-t-2 border-slate-50 space-y-12">
+                   <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex items-center gap-3 text-emerald-500 font-black text-sm md:text-base bg-emerald-50 px-5 py-2.5 rounded-2xl border border-emerald-100">
+                          <Unlock size={20} /> Cerita Berhasil Dibuka!
+                      </div>
+                      <button className="flex items-center gap-2 text-primary font-black text-base hover:scale-105 transition-transform bg-primary/5 px-5 py-2.5 rounded-full border border-primary/20">
+                          <Speaker size={20} /> Dengarkan Cerita 🎧
+                      </button>
                    </div>
-                   <button className="flex items-center gap-2 text-primary font-black text-base hover:scale-105 transition-transform bg-primary/5 px-5 py-2.5 rounded-full border border-primary/20">
-                      <Speaker size={20} /> Dengarkan Cerita 🎧
-                   </button>
+
+                   {/* Mark As Finished Section */}
+                   <div className="flex flex-col items-center justify-center py-10 text-center space-y-6 bg-slate-50/50 rounded-[3rem] p-8 border border-slate-100">
+                      <div className="space-y-2">
+                        <h4 className="text-xl font-black text-slate-800 tracking-tight">Sudah Selesai Membaca?</h4>
+                        <p className="text-slate-400 font-bold text-sm">Klik tombol di bawah untuk menambah poin petualangmu!</p>
+                      </div>
+                      <MarkAsFinished 
+                        storyId={story.id} 
+                        userId={session.user.id} 
+                        isCompleted={!!progress} 
+                      />
+                   </div>
                 </div>
               )}
             </div>

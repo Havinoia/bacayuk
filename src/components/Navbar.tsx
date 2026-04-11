@@ -5,9 +5,21 @@ import { BookOpen, User, LogIn, Menu, LogOut, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
-export function Navbar() {
+export function Navbar({ currentRole }: { currentRole?: string | null }) {
   const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
+
+  const ROLE_LABELS: Record<string, string> = {
+    dwarf: "Dwarf",
+    peri: "Peri",
+    kesatria: "Kesatria",
+    penyihir: "Penyihir",
+    pemanah: "Pemanah",
+    default: "Jelajah Cerita"
+  };
+
+
+  const activeLabel = currentRole ? ROLE_LABELS[currentRole.toLowerCase()] || ROLE_LABELS.default : ROLE_LABELS.default;
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -30,7 +42,10 @@ export function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/dashboard/collections" className="px-5 py-2 rounded-full text-sm font-black text-foreground/40 hover:text-primary hover:bg-primary/5 transition-all">Jelajah Cerita</Link>
+            <Link href="/dashboard/collections" className="px-5 py-2 rounded-full text-sm font-black text-foreground/40 hover:text-primary hover:bg-primary/5 transition-all">
+                {activeLabel}
+            </Link>
+
             
             <div className="h-6 w-px bg-black/5" />
             

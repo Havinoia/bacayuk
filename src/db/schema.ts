@@ -90,9 +90,28 @@ export const heroes = pgTable("heroes", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Reading Progress Table
+export const readingProgress = pgTable("reading_progress", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id),
+  storyId: integer("story_id").notNull().references(() => stories.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const heroesRelations = relations(heroes, ({ one }) => ({
   user: one(user, {
     fields: [heroes.userId],
     references: [user.id],
+  }),
+}));
+
+export const readingProgressRelations = relations(readingProgress, ({ one }) => ({
+  user: one(user, {
+    fields: [readingProgress.userId],
+    references: [user.id],
+  }),
+  story: one(stories, {
+    fields: [readingProgress.storyId],
+    references: [stories.id],
   }),
 }));

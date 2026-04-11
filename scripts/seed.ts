@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { db } from "../src/db/index";
-import { categories, stories, user, account, heroes, session, readingProgress } from "../src/appDataDir/../src/db/schema"; // Fixed path if needed, but standard is relative
 
 // Note: Using standard relative paths for the script
 import { 

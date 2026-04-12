@@ -96,7 +96,7 @@ export default async function CollectionsPage({
       {/* Grid Section */}
       <div className="relative z-10">
       {allStories.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {allStories.map((story) => (
             <Link 
               key={story.id} 
@@ -104,32 +104,32 @@ export default async function CollectionsPage({
               className="group"
             >
               <div className="bubble-card flex flex-col h-full hover:shadow-primary/10 transition-all duration-500">
-                <div className={`aspect-[16/10] w-full ${COLOR_MAP[story.category?.name || "default"]} relative p-8 flex items-end overflow-hidden`}>
+                <div className={`aspect-[16/10] w-full ${COLOR_MAP[story.category?.name || "default"]} relative p-6 flex items-end overflow-hidden`}>
                   <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   
                   {/* Decorative icon backdrop */}
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
-                      <BookOpen size={200} strokeWidth={1} className="text-white" />
+                      <BookOpen size={150} strokeWidth={1} className="text-white" />
                   </div>
 
                   <div className="relative z-10 w-full flex justify-between items-center text-white">
-                      <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-black uppercase tracking-widest border border-white/20">
+                      <span className="px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-[9px] font-black uppercase tracking-widest border border-white/20">
                           {story.category?.name}
                       </span>
-                      <div className="w-12 h-12 rounded-2xl bg-white text-primary flex items-center justify-center shadow-xl group-hover:scale-110 transition-all">
-                          <ArrowRight size={24} strokeWidth={4} />
+                      <div className="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shadow-xl group-hover:scale-110 transition-all">
+                          <ArrowRight size={20} strokeWidth={4} />
                       </div>
                   </div>
                 </div>
 
-                <div className="p-8 space-y-4 bg-white border-t-4 border-black/5">
-                  <h3 className="text-2xl font-black font-header text-foreground group-hover:text-primary transition-colors leading-tight">
+                <div className="p-6 space-y-3 bg-white border-t-4 border-black/5 flex-1 flex flex-col">
+                  <h3 className="text-xl font-black font-header text-foreground group-hover:text-primary transition-colors leading-tight">
                     {story.title}
                   </h3>
-                  <p className="text-foreground/40 text-sm line-clamp-2 leading-relaxed font-bold">
+                  <p className="text-foreground/40 text-[13px] line-clamp-2 leading-relaxed font-bold flex-1">
                     {story.preview}
                   </p>
-                  <div className="pt-4 flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-widest leading-none">
+                  <div className="pt-3 flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-widest leading-none">
                     <Clock size={14} /> 5 MENIT BACA
                   </div>
                 </div>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "inverse-surface": "#0e0e0d",
+                  "surface-container-high": "#e4e2de",
+                  "on-surface-variant": "#5b5c59",
+                  "primary": "#00618f",
+                  "on-secondary-container": "#005d2c",
+                  "surface-tint": "#00618f",
+                  "on-surface": "#2e2f2d",
+                  "on-secondary-fixed-variant": "#006832",
+                  "surface-container-lowest": "#ffffff",
+                  "secondary": "#006a33",
+                  "on-error-container": "#520c00",
+                  "error-dim": "#b92902",
+                  "secondary-container": "#3fff8b",
+                  "surface-container-highest": "#deddd8",
+                  "surface-bright": "#f8f6f2",
+                  "on-primary-fixed": "#00070f",
+                  "surface": "#f8f6f2",
+                  "on-background": "#2e2f2d",
+                  "on-tertiary-container": "#503300",
+                  "surface-container-low": "#f2f1ec",
+                  "surface-variant": "#deddd8",
+                  "on-error": "#ffefec",
+                  "inverse-primary": "#00affe",
+                  "inverse-on-surface": "#9e9d99",
+                  "tertiary-fixed": "#feaa00",
+                  "on-secondary-fixed": "#004820",
+                  "on-primary-container": "#002a42",
+                  "outline-variant": "#aeadaa",
+                  "secondary-fixed-dim": "#24f07e",
+                  "tertiary-container": "#feaa00",
+                  "on-tertiary": "#fff0e2",
+                  "secondary-dim": "#005c2b",
+                  "error": "#b02500",
+                  "on-primary-fixed-variant": "#00344f",
+                  "tertiary": "#7e5200",
+                  "tertiary-fixed-dim": "#ec9e00",
+                  "error-container": "#f95630",
+                  "on-secondary": "#cdffd3",
+                  "primary-container": "#00affe",
+                  "on-primary": "#eaf4ff",
+                  "background": "#f8f6f2",
+                  "surface-container": "#e9e8e4",
+                  "outline": "#777774",
+                  "tertiary-dim": "#6e4800",
+                  "secondary-fixed": "#3fff8b",
+                  "on-tertiary-fixed-variant": "#5b3b00",
+                  "on-tertiary-fixed": "#331f00",
+                  "primary-dim": "#00557d",
+                  "primary-fixed": "#00affe",
+                  "primary-fixed-dim": "#00a1ea",
+                  "surface-dim": "#d5d4d0"
+          },
+          "borderRadius": {
+                  "DEFAULT": "1rem",
+                  "lg": "2rem",
+                  "xl": "3rem",
+                  "full": "9999px"
+          },
+          "fontFamily": {
+                  "headline": ["Plus Jakarta Sans"],
+                  "body": ["Be Vietnam Pro"],
+                  "label": ["Be Vietnam Pro"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8f6f2; color: #2e2f2d; }
+    h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .magical-glow {
+      box-shadow: 0 10px 40px -10px rgba(0, 97, 143, 0.15);
+    }
+    .inner-glow {
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    }
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #deddd8; border-radius: 10px; }
+    .shimmer {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 3s infinite linear;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
+</head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
+<div class="flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="hidden md:flex flex-col h-screen w-64 rounded-r-xl sticky left-0 top-0 border-r border-white/20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl shadow-[20px_0_40px_rgba(0,0,0,0.02)] py-8 px-4 z-50">
+<div class="flex items-center gap-3 px-2 mb-10">
+<div class="w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white text-2xl" data-weight="fill">school</span>
+</div>
+<div>
+<h3 class="text-on-surface font-bold text-sm leading-tight">Storybook Portal</h3>
+<p class="text-xs text-on-surface-variant">Level 12 Mage</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 py-3 px-4 transition-all duration-200 text-stone-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-semibold font-headline">Library</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 transition-all duration-200 text-stone-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="swords">swords</span>
+<span class="font-semibold font-headline">Quests</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 transition-all duration-200 bg-gradient-to-r from-blue-500 to-blue-400 text-white rounded-2xl mx-2 shadow-lg shadow-blue-200/50" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-semibold font-headline">Academy</span>
+</a>
+</nav>
+<div class="mt-auto space-y-2 border-t border-surface-container pt-6">
+<button class="w-full py-4 mb-4 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">auto_fix_high</span>
+          Cast Magic
+        </button>
+<a class="flex items-center gap-4 py-2 px-4 text-stone-500 text-sm hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-4 py-2 px-4 text-stone-500 text-sm hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Log Out</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar (Shared Component) -->
+<header class="sticky top-0 z-40 bg-stone-50/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,97,143,0.06)] px-6 py-3 flex justify-between items-center w-full">
+<div class="flex items-center gap-8">
+<h1 class="text-2xl font-bold tracking-tight text-emerald-700 dark:text-emerald-400 bg-clip-text bg-gradient-to-r from-emerald-600 to-blue-600 font-headline">Magical Academy</h1>
+<div class="hidden lg:flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full border border-white/40">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 placeholder:text-on-surface-variant" placeholder="Search for spells or books..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-stone-200/50 transition-all active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-stone-200/50 transition-all active:scale-90">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+</button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-container/30">
+<img alt="Student Apprentice Profile" class="w-full h-full object-cover" data-alt="close-up of a young enthusiastic student wearing a scholar's hat in a magical fantasy academy setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHODyCsHDlMDx2PbC4I7Yq8QNtdF2Stxl4uTaJKMovT4hp66dy6or_S2W-qlHho79olQ4EjHtxzXPLigswodaZ-dpBJhAawqej-ABRvCtr89pnrDKhPuA1C3KHJDyaHHQ2LcgD5Okdspysp283KhVaGieHARpZUmHJi4GwEPrj0CrgHORt7RBaeyfoGSwL_UO_kkkBw3KLwN20jliMdWvDA0hKFrcxjsf6zScfolDG4UPLTgwk0hmG83ROkgSikAkjzRoHJ0zuKDE"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="p-6 md:p-10 space-y-8 max-w-[1600px] mx-auto w-full">
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Column 1: Hero & Quests (Left + Middle) -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Welcome Hero Section -->
+<section class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary-dim p-8 md:p-12 text-on-primary magical-glow">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/20 blur-[80px] rounded-full -mr-20 -mt-20"></div>
+<div class="absolute bottom-0 left-0 w-48 h-48 bg-secondary-container/10 blur-[60px] rounded-full -ml-10 -mb-10"></div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex-1 space-y-4">
+<span class="px-4 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-bold tracking-widest uppercase border border-white/10">Kesatria Rank: Gold</span>
+<h2 class="text-4xl md:text-5xl font-bold leading-tight font-headline">Welcome back, Apprentice!</h2>
+<p class="text-lg text-on-primary/80 max-w-md">Your adventure continues in the Whispering Woods. 3 new chapters are waiting for your magic touch.</p>
+<button class="mt-4 px-8 py-4 bg-white text-primary font-bold rounded-xl shadow-xl hover:shadow-primary-container/20 hover:scale-105 transition-all">Resume Quest</button>
+</div>
+<div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+<div class="absolute inset-0 rounded-full border-8 border-white/10"></div>
+<div class="absolute inset-0 rounded-full border-t-8 border-secondary-container animate-pulse"></div>
+<div class="text-center">
+<span class="text-4xl font-extrabold block">78%</span>
+<span class="text-xs uppercase tracking-widest opacity-70">Weekly Goal</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Continue Adventure Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-bold font-headline text-on-surface">Continue Adventure</h3>
+<button class="text-primary font-semibold text-sm flex items-center gap-1 hover:underline">View Library <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-6 custom-scrollbar snap-x">
+<!-- Book Card 1 -->
+<div class="flex-none w-72 bg-surface-container-low rounded-xl p-4 snap-start hover:scale-[1.02] transition-transform cursor-pointer border border-white/50 shadow-sm">
+<div class="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative">
+<img alt="Book Cover" class="w-full h-full object-cover" data-alt="enchanted book with a glowing blue crystal embedded in the leather cover sitting on a wooden desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA48-QFJTjN7M3XWVTQqDmlgjLdryrxfZ4nJVk9Z3CgQG-tUJqQk4T54IdP1C1f-8E90rY9o3-QBUHtnb5PnLB2_1uvUzLLENtf0kIeb2GAMNEb5OOOsJY1NRbcYFAUpMCV8OZ7QEyLPZipLAX1Ebbdsjs_zoO9MxEiJ5HjTVpQ1UreHHq1dqdNzFJRtqtAagLiy0gMPwNOsr0UPfPLclnMd4xQXOTdicL45ikidreDix45oMbYF_4tcGWYdtp_pIbN56qgMYf93IA"/>
+<div class="absolute top-2 right-2 bg-black/40 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full">Fantasy</div>
+</div>
+<h4 class="font-bold text-on-surface truncate">The Legend of the Azure Dragon</h4>
+<div class="flex items-center justify-between mt-3">
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden mr-3">
+<div class="h-full bg-primary w-3/4 rounded-full"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">75%</span>
+</div>
+</div>
+<!-- Book Card 2 -->
+<div class="flex-none w-72 bg-surface-container-low rounded-xl p-4 snap-start hover:scale-[1.02] transition-transform cursor-pointer border border-white/50 shadow-sm">
+<div class="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative">
+<img alt="Book Cover" class="w-full h-full object-cover" data-alt="vibrant storybook cover showing a floating island with a large golden tree and birds of paradise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYKUEVKEeTstQ0TLIVdQu6KtEpBU_BMzDIKSjHWcSACco399MZNApjqmfHjl8kvOXI4v8EeP25sfayVsgfRcVZ6klwuRz22ZhiWmbxidCO2KpGD7ToL4_oIJ_d53z3ky4PvShPrSnZvp9nnPIr3NqQjoVue0RXP3SHhI8rhE1Aw0QNsoiNHgzd_Ep61X5CfAXWDBChq-STrnAnZhpXjExNNDT5OMHbea_R78vc2cT7YghHCpRqo47UzFyEculK1TYcQgWLs_p68-o"/>
+<div class="absolute top-2 right-2 bg-black/40 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full">Adventure</div>
+</div>
+<h4 class="font-bold text-on-surface truncate">Island of Eternal Sun</h4>
+<div class="flex items-center justify-between mt-3">
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden mr-3">
+<div class="h-full bg-primary w-2/5 rounded-full"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">40%</span>
+</div>
+</div>
+<!-- Book Card 3 -->
+<div class="flex-none w-72 bg-surface-container-low rounded-xl p-4 snap-start hover:scale-[1.02] transition-transform cursor-pointer border border-white/50 shadow-sm">
+<div class="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative">
+<img alt="Book Cover" class="w-full h-full object-cover" data-alt="dark magical leather book cover with glowing green runes and silver latch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMifIJ-IXOS7sPaLMgFvI2BZvlvG1rFXQmgy3igVfvue5XM61V1OHFWpU1wAiSaUaCns-8bLiWcqkAPvYoD7uVr0J46C0d03_kmJARZJmdmffCZUiSty-P5wBOldQq3ZvnTC1n3ysK-BPkOoOH3hMffgqk4O8L1hd0Dn58qxoJ0Y92f4WjZ-DY9Npje01ETxdUp12h-hkut7oegU_MlwMqjW6uU5ZcoOxFyXj62TlCYJwUTlm3FxA44Lkjz-z9XdVNfRxyQfleFIU"/>
+<div class="absolute top-2 right-2 bg-black/40 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full">Mystery</div>
+</div>
+<h4 class="font-bold text-on-surface truncate">Secrets of the Iron Fortress</h4>
+<div class="flex items-center justify-between mt-3">
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden mr-3">
+<div class="h-full bg-primary w-1/12 rounded-full"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">5%</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Column 2: RPG Stats & Friends (Right) -->
+<div class="lg:col-span-4 space-y-8">
+<!-- My Hero Character Card -->
+<section class="glass-panel rounded-xl p-8 magical-glow border border-white/60 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-8xl" data-weight="fill">shield_with_heart</span>
+</div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="w-40 h-40 rounded-full border-4 border-primary p-2">
+<img alt="Hero Avatar" class="w-full h-full object-cover rounded-full" data-alt="3D render of a stylized cute young fantasy knight in blue armor with glowing blue eyes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCELDl9-7lWdXanYavuy2bSJT_z_RquhpWBMZp3yJaPhqXvyKQIRi9mvyXQG6SDpqZMtTgjARVbAbt5dLR8YNQ59qlsAJvFOW9SFT80JogYROtbeZ9SweHU9GYMRMjQqqZNWwu55yYMRQ6l59uCLEX_mE4H1NG500VwSE4RZ1YYBOUh7CKpb95XfoLESqZLkL52TnFCvZkhxt2zjjhJdBFdL3dB4SZGBoRQBSMTwTYkbxeywo3pJAFaNflEEgcQvj4_41NU58edW8w"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-tertiary text-on-tertiary px-3 py-1 rounded-full text-sm font-bold shadow-lg">LVL 12</div>
+</div>
+<h3 class="text-2xl font-bold font-headline text-on-surface">Sir Reads-a-Lot</h3>
+<p class="text-on-surface-variant text-sm mb-8">Novice Kesatria of the Blue Flame</p>
+<div class="w-full space-y-6">
+<!-- HP Stat -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-xs font-bold">
+<span class="flex items-center gap-1 text-red-600"><span class="material-symbols-outlined text-sm" data-weight="fill">favorite</span> HP</span>
+<span class="text-on-surface">850 / 1200</span>
+</div>
+<div class="h-3 bg-stone-200 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-red-500 to-red-400 w-[70%] rounded-full relative">
+<div class="absolute inset-0 shimmer"></div>
+</div>
+</div>
+</div>
+<!-- ATK Stat -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-xs font-bold">
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-sm" data-weight="fill">swords</span> ATK (Vocabulary)</span>
+<span class="text-on-surface">142</span>
+</div>
+<div class="h-3 bg-stone-200 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[85%] rounded-full relative">
+<div class="absolute inset-0 shimmer"></div>
+</div>
+</div>
+</div>
+<!-- DEF Stat -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-xs font-bold">
+<span class="flex items-center gap-1 text-secondary"><span class="material-symbols-outlined text-sm" data-weight="fill">shield</span> DEF (Grammar)</span>
+<span class="text-on-surface">98</span>
+</div>
+<div class="h-3 bg-stone-200 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary to-secondary-container w-[60%] rounded-full relative">
+<div class="absolute inset-0 shimmer"></div>
+</div>
+</div>
+</div>
+<!-- SPD Stat -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-xs font-bold">
+<span class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-sm" data-weight="fill">bolt</span> SPD (Reading Rate)</span>
+<span class="text-on-surface">WPM 24</span>
+</div>
+<div class="h-3 bg-stone-200 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-tertiary to-tertiary-container w-[45%] rounded-full relative">
+<div class="absolute inset-0 shimmer"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Daily Challenges -->
+<section class="space-y-4">
+<h3 class="text-xl font-bold font-headline text-on-surface px-2">Daily Challenges</h3>
+<div class="space-y-3">
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-4 border border-white/40 hover:bg-white transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-tertiary-container flex items-center justify-center text-on-tertiary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-weight="fill">menu_book</span>
+</div>
+<div class="flex-1">
+<h5 class="text-sm font-bold">Speed Reader</h5>
+<p class="text-[11px] text-on-surface-variant">Finish 2 chapters before dusk</p>
+</div>
+<div class="text-right">
+<span class="text-[10px] block font-bold text-tertiary">+50 XP</span>
+<span class="material-symbols-outlined text-amber-500 text-sm">stars</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-4 border border-white/40 hover:bg-white transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-weight="fill">spellcheck</span>
+</div>
+<div class="flex-1">
+<h5 class="text-sm font-bold">Spell Binder</h5>
+<p class="text-[11px] text-on-surface-variant">Define 5 new magical words</p>
+</div>
+<div class="text-right">
+<span class="text-[10px] block font-bold text-tertiary">+30 XP</span>
+<span class="material-symbols-outlined text-amber-500 text-sm">stars</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Magical Friends / Guild -->
+<section class="space-y-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="text-xl font-bold font-headline text-on-surface">The High Table</h3>
+<span class="text-xs bg-secondary-container text-on-secondary px-2 py-0.5 rounded-full font-bold">4 Online</span>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="relative group">
+<div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-primary to-primary-container">
+<img alt="Friend" class="w-full h-full object-cover rounded-full border-2 border-surface" data-alt="portrait of a cheerful boy avatar with blonde hair and goggles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVLOKd-5e30HHmp5UBVsYKG2XbhGNPBKdrbvq6aK_ljts72FNePR5MxZQ6SOFct2_UCOSuutCddO95Vi3vCs1tw8S_K1DTHQTZ9mgA8kzFD5zykZUX2Ew6D8-WG0mCYP_WsO6Jz2OyHcA-_m0hgWrfE2K77qwa0AZqMjk0h1FnTnfREKsuCcobw6aXqUp55_APOtyvKVwp46FueB_NCRTFNoaQPHFM0nGwon4iVMZXte8S9xpwFnZvWSarMWcAolrOgcRXC-XcZeI"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Leo the Lion</div>
+</div>
+<div class="relative group">
+<div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-secondary to-secondary-container">
+<img alt="Friend" class="w-full h-full object-cover rounded-full border-2 border-surface" data-alt="portrait of a friendly girl avatar with braided hair and a flower crown" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4UM28JjFoQLSxAGX9AWOytdj2qKOw3mY6CaxGmV3q-jzolN5-GKp176Zfou5PLXTKtU_Io0_MO4QM-bBtkpZ7ynKqdQWhtFzzz3LaGhlaYJiPWcY5iUjtByPA6NDZ2qsHmCta-gecowEhfzc4MYSKZYWHw-frbc6jqwzaLU3NRAE48nl4p_aVdSGuBwO4guclREDgvC8oJgCnZJaT3mDikUVpUQEGBS7YOSgLLQ9pqF6-nebMZY8Q2PV7B2B2tNHzfwaqpNJhRpE"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Luna Star</div>
+</div>
+<div class="relative group">
+<div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-tertiary to-tertiary-container">
+<img alt="Friend" class="w-full h-full object-cover rounded-full border-2 border-surface" data-alt="portrait of a young boy avatar wearing a red scholar's robe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQyc5gs0F1gYBAsoiAncfg7c2n6nJIVUMjz-BGRjEnHXIRDGcy4XxS8UwC6AmeoOA0tZzgrDJJQBYsJIXvD-GVX6gyDgqbWRugH9vObOH8JKJkVZ-K_rSnnb3QcIOgfhqr6CZqygyRO0c4xa5fvyQ4oVD6sJUkt_P10U6SSedrXBxGDi3JwMWr1hlQ4gSMCUzKmkx4Wm2PvnT_wQmSWok0neT7derI7olsKsGhVa6d7SZ0L2ApdrJrbxoy5ME1_NTBS_ugbxLuphU"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Mage Arthur</div>
+</div>
+<div class="relative group">
+<div class="w-14 h-14 rounded-full p-0.5 bg-stone-200">
+<img alt="Friend" class="w-full h-full object-cover rounded-full border-2 border-surface grayscale" data-alt="portrait of a cool boy avatar with spiky hair and a blue scarf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGP0UUEuSztxWlGVp595mGOa7wbkc2dNnEo0TyNt1Bo__ALSfXsaTrX9vbF7_hS7Tmn4IqNcIAEXzHpADPxMeo7P_W3K-b4-KEPi947x7PhcVCKCAV8Ha8n_xEJxu5UN5GKC3e8C7-xnHSY4qDWS8iSvS97KqJr6-B3lxtpRfi3PrIj1niALC_8X9HDmNKmIzfBcezBdZ776wDWpBz_RwOzxm2GLO4wLaqHTWW9RZq2cmc3RAZsxmnywRSRk3OLzEMMERwa6yisuY"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-stone-400 border-2 border-surface rounded-full"></div>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Zane (Offline)</div>
+</div>
+<button class="w-14 h-14 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center text-outline-variant hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-white/20 px-6 py-4 flex justify-around items-center z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories" data-weight="fill">auto_stories</span>
+<span class="text-[10px] font-bold">Library</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="swords">swords</span>
+<span class="text-[10px] font-medium">Quests</span>
+</a>
+<div class="relative -mt-12">
+<button class="w-16 h-16 rounded-full bg-primary text-white shadow-xl flex items-center justify-center border-4 border-surface">
+<span class="material-symbols-outlined text-3xl">auto_fix_high</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="text-[10px] font-medium">Academy</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+</body></html>

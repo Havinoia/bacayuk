@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
-import { heroes, stories, categories, readingProgress } from "@/db/schema";
+import { heroes, stories, categories, readingProgress, quests, userQuests } from "@/db/schema";
 import { eq, desc, count, and } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Clock, ChevronRight, Star, Shield, Sword, Heart, Zap, Wand2, Target, Trophy, Users } from "lucide-react";
@@ -17,7 +17,7 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
-  // Get Hero current role
+  // Get Hero current role and stats
   const currentHero = await db.query.heroes.findFirst({
     where: eq(heroes.userId, session.user.id)
   });
@@ -50,6 +50,36 @@ export default async function DashboardPage() {
           storyProgressMap[p.storyId] = true;
       });
   }
+
+  // Fetch Daily Quests and Hero Stats
+  const activeDailyQuests = await db.query.quests.findMany({
+      where: eq(quests.isDaily, true)
+  });
+
+  // Initialize user quests if missing
+  for (const quest of activeDailyQuests) {
+      const existing = await db.query.userQuests.findFirst({
+          where: and(
+              eq(userQuests.userId, session.user.id),
+              eq(userQuests.questId, quest.id)
+          )
+      });
+
+      if (!existing) {
+          await db.insert(userQuests).values({
+              userId: session.user.id,
+              questId: quest.id,
+              currentValue: 0,
+              isCompleted: false,
+          });
+      }
+  }
+
+  const userActiveQuests = await db.query.userQuests.findMany({
+      where: eq(userQuests.userId, session.user.id),
+      with: { quest: true },
+      limit: 2
+  });
 
   const HERO_THEMES: Record<string, any> = {
     dwarf: {
@@ -255,7 +285,7 @@ export default async function DashboardPage() {
                   />
                 </div>
                 <div className="absolute -bottom-4 right-0 bg-yellow-400 text-amber-900 px-5 py-2 rounded-2xl text-sm font-black shadow-xl shadow-yellow-400/20 border-4 border-white">
-                    LV. 12
+                    LV. {currentHero?.level || 1}
                 </div>
               </div>
               
@@ -301,33 +331,31 @@ export default async function DashboardPage() {
                Misi Harian <Trophy className="text-amber-500" />
             </h3>
             <div className="space-y-4">
-              <div className="glass-panel p-6 rounded-3xl flex items-center gap-5 border border-white/60 hover:bg-white transition-all cursor-pointer group shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
-                   <Link href="/dashboard/collections"><Clock size={28} /></Link>
-                </div>
-                <div className="flex-1">
-                  <h5 className="font-black text-sm">Pembaca Kilat</h5>
-                  <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-wide">Selesaikan 2 bab hari ini</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] font-black text-primary block">+50 XP</span>
-                  <Star size={16} className="text-amber-500 fill-amber-500 inline" />
-                </div>
-              </div>
-
-              <div className="glass-panel p-6 rounded-3xl flex items-center gap-5 border border-white/60 hover:bg-white transition-all cursor-pointer group shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                   <Target size={28} />
-                </div>
-                <div className="flex-1">
-                  <h5 className="font-black text-sm">Pakar Kata</h5>
-                  <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-wide">Pelajari 5 kosa kata baru</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] font-black text-primary block">+30 XP</span>
-                  <Star size={16} className="text-amber-500 fill-amber-500 inline" />
-                </div>
-              </div>
+              {userActiveQuests.map((uq) => (
+                  <Link key={uq.id} href="/dashboard/quests">
+                      <div className={`glass-panel p-6 mb-4 rounded-3xl flex items-center gap-5 border border-white/60 hover:bg-white transition-all cursor-pointer group shadow-lg ${uq.isCompleted ? 'bg-emerald-50/50' : ''}`}>
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${uq.quest.type === 'READING' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'}`}>
+                           {uq.quest.type === 'READING' ? <Clock size={28} /> : <Target size={28} />}
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="font-black text-sm">{uq.quest.title}</h5>
+                          <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-wide">
+                              {uq.isCompleted ? 'MISI SELESAI!' : uq.quest.description}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] font-black text-primary block">+{uq.quest.xpReward} XP</span>
+                          <Star size={16} className={`inline ${uq.isCompleted ? 'text-emerald-500 fill-emerald-500' : 'text-amber-500 fill-amber-500'}`} />
+                        </div>
+                      </div>
+                  </Link>
+              ))}
+              
+              {userActiveQuests.length === 0 && (
+                  <div className="p-10 text-center glass-panel rounded-3xl border border-dashed border-black/10">
+                      <p className="text-sm font-bold text-foreground/30">Belum ada misi tersedia</p>
+                  </div>
+              )}
             </div>
           </section>
 

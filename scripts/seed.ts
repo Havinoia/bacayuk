@@ -5,13 +5,17 @@ import { db } from "../src/db/index";
 import { 
     categories as categoriesTable, 
     stories as storiesTable, 
-    readingProgress as readingProgressTable
+    readingProgress as readingProgressTable,
+    quests as questsTable,
+    userQuests as userQuestsTable
 } from "../src/db/schema";
 
 async function main() {
     console.log("Seeding started...");
 
     // Clear existing data (Order matters for FK constraints)
+    await db.delete(userQuestsTable);
+    await db.delete(questsTable);
     await db.delete(readingProgressTable);
     await db.delete(storiesTable);
     await db.delete(categoriesTable);
@@ -24,6 +28,28 @@ async function main() {
         { name: "Legenda", description: "Cerita rakyat yang dianggap benar-benar terjadi." },
         { name: "Dongeng", description: "Cerita khayalan atau fantasi yang penuh keajaiban." },
     ]).returning();
+
+    // Insert Quests
+    await db.insert(questsTable).values([
+        {
+            title: "Pembaca Kilat",
+            description: "Selesaikan 2 bab hari ini",
+            xpReward: 50,
+            type: "READING",
+            targetValue: 2,
+            isDaily: true,
+        },
+        {
+            title: "Pakar Kata",
+            description: "Pelajari 5 kosa kata baru",
+            xpReward: 30,
+            type: "VOCABULARY",
+            targetValue: 5,
+            isDaily: true,
+        }
+    ]);
+
+    console.log("Quests seeded.");
 
     // Insert 3 Premium Stories
     await db.insert(storiesTable).values([

@@ -192,10 +192,11 @@ export default async function DashboardPage() {
               <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center shrink-0">
                 <div className="absolute inset-0 rounded-full border-[12px] border-white/10"></div>
                 <div 
-                    className="absolute inset-0 rounded-full border-t-[12px] border-yellow-400" 
+                    className="absolute inset-0 rounded-full border-t-[12px] border-yellow-400 animate-spin" 
                     style={{ 
-                        transform: `rotate(${readingPercentage * 3.6}deg)`,
-                        transition: 'transform 1s ease-out'
+                        animationDuration: '4s',
+                        opacity: 0.9,
+                        filter: 'drop-shadow(0 0 8px rgba(250, 204, 21, 0.4))'
                     }} 
                 ></div>
                 <div className="text-center">

@@ -360,32 +360,7 @@ export default async function DashboardPage() {
             </div>
           </section>
 
-          {/* Social / High Table */}
-          <section className="space-y-6 pb-10 md:pb-0">
-             <div className="flex items-center justify-between px-2">
-                <h3 className="text-2xl font-black font-header text-foreground flex items-center gap-3">
-                   Pasukan Ajaib <Users className="text-primary" />
-                </h3>
-                <span className="text-[10px] font-black bg-primary/10 text-primary px-3 py-1 rounded-full uppercase tracking-widest">
-                   4 ONLINE
-                </span>
-             </div>
-             <div className="flex flex-wrap gap-4 px-2">
-                {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="relative group cursor-pointer">
-                        <div className="w-16 h-16 rounded-[1.5rem] p-1 bg-gradient-to-tr from-primary to-blue-400">
-                           <div className="w-full h-full bg-white rounded-[1.2rem] overflow-hidden flex items-center justify-center text-primary font-black text-xl">
-                               {String.fromCharCode(64 + i)}
-                           </div>
-                        </div>
-                        <div className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-4 border-white rounded-full shadow-lg" />
-                    </div>
-                ))}
-                <button className="w-16 h-16 rounded-[1.5rem] border-4 border-dashed border-foreground/10 flex items-center justify-center text-foreground/20 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
-                    <ChevronRight size={24} />
-                </button>
-             </div>
-          </section>
+
         </div>
       </div>
     </div>

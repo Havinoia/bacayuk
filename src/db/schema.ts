@@ -112,13 +112,6 @@ export const readingProgress = pgTable("reading_progress", {
 });
 
 // Relations
-export const storiesRelations = relations(stories, ({ one }) => ({
-  category: one(categories, {
-    fields: [stories.categoryId],
-    references: [categories.id],
-  }),
-}));
-
 export const categoriesRelations = relations(categories, ({ many }) => ({
   stories: many(stories),
 }));
@@ -141,6 +134,72 @@ export const readingProgressRelations = relations(readingProgress, ({ one }) => 
   }),
 }));
 
+// Story Pages Table
+export const storyPages = pgTable("story_pages", {
+  id: serial("id").primaryKey(),
+  storyId: integer("story_id").notNull().references(() => stories.id),
+  pageNumber: integer("page_number").notNull(),
+  content: text("content").notNull(),
+  imageUrl: text("image_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Story Pins Table (User's last position in a story)
+export const storyPins = pgTable("story_pins", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id),
+  storyId: integer("story_id").notNull().references(() => stories.id),
+  pageNumber: integer("page_number").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Story Page Favorites (Multiple pages can be favorited)
+export const storyPageFavorites = pgTable("story_page_favorites", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id),
+  storyId: integer("story_id").notNull().references(() => stories.id),
+  pageNumber: integer("page_number").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// New Relations
+export const storyPagesRelations = relations(storyPages, ({ one }) => ({
+  story: one(stories, {
+    fields: [storyPages.storyId],
+    references: [stories.id],
+  }),
+}));
+
+export const storyPinsRelations = relations(storyPins, ({ one }) => ({
+  user: one(user, {
+    fields: [storyPins.userId],
+    references: [user.id],
+  }),
+  story: one(stories, {
+    fields: [storyPins.storyId],
+    references: [stories.id],
+  }),
+}));
+
+export const storyPageFavoritesRelations = relations(storyPageFavorites, ({ one }) => ({
+  user: one(user, {
+    fields: [storyPageFavorites.userId],
+    references: [user.id],
+  }),
+  story: one(stories, {
+    fields: [storyPageFavorites.storyId],
+    references: [stories.id],
+  }),
+}));
+
+export const storiesRelations = relations(stories, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [stories.categoryId],
+    references: [categories.id],
+  }),
+  pages: many(storyPages),
+}));
+
 export const questsRelations = relations(quests, ({ many }) => ({
   userQuests: many(userQuests),
 }));
@@ -155,3 +214,4 @@ export const userQuestsRelations = relations(userQuests, ({ one }) => ({
     references: [quests.id],
   }),
 }));
+

@@ -5,8 +5,8 @@ import { db } from "@/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { eq, and } from "drizzle-orm";
-import { stories, readingProgress } from "@/db/schema";
-import { MarkAsFinished } from "@/components/MarkAsFinished";
+import { stories, readingProgress, storyPages, storyPins, storyPageFavorites } from "@/db/schema";
+import { StoryReader } from "@/components/StoryReader";
 
 export default async function StoryPage({ params }: { params: { slug: string } }) {
   const { slug } = await params;
@@ -14,7 +14,10 @@ export default async function StoryPage({ params }: { params: { slug: string } }
   const story = await db.query.stories.findFirst({
     where: eq(stories.slug, slug),
     with: {
-        category: true
+        category: true,
+        pages: {
+            orderBy: (pages, { asc }) => [asc(pages.pageNumber)]
+        }
     }
   });
   
@@ -24,17 +27,43 @@ export default async function StoryPage({ params }: { params: { slug: string } }
   
   const isLoggedIn = !!session;
   
-  // Fetch reading progress if logged in
-  const progress = (isLoggedIn && story) ? await db.query.readingProgress.findFirst({
-    where: and(
-        eq(readingProgress.userId, session.user.id),
-        eq(readingProgress.storyId, story.id)
-    )
-  }) : null;
+  // Fetch reading progress, pins, and favorites if logged in
+  let progress = null;
+  let pin = null;
+  let favorites: number[] = [];
+
+  if (isLoggedIn && story) {
+      progress = await db.query.readingProgress.findFirst({
+          where: and(
+              eq(readingProgress.userId, session.user.id),
+              eq(readingProgress.storyId, story.id)
+          )
+      });
+
+      pin = await db.query.storyPins.findFirst({
+          where: and(
+              eq(storyPins.userId, session.user.id),
+              eq(storyPins.storyId, story.id)
+          )
+      });
+
+      const favResults = await db.query.storyPageFavorites.findMany({
+          where: and(
+              eq(storyPageFavorites.userId, session.user.id),
+              eq(storyPageFavorites.storyId, story.id)
+          )
+      });
+      favorites = favResults.map(f => f.pageNumber);
+  }
 
   if (!story) {
     return <div className="p-20 text-center font-black">Cerita tidak ditemukan!</div>;
   }
+
+  // Fallback for stories that haven't been split into pages yet
+  const displayPages = story.pages.length > 0 
+    ? story.pages 
+    : [{ pageNumber: 1, content: story.content, imageUrl: story.thumbnailUrl }];
 
   return (
     <div className="min-h-screen bg-[#fffef0] py-10 px-4 md:px-8 relative overflow-hidden">
@@ -89,67 +118,47 @@ export default async function StoryPage({ params }: { params: { slug: string } }
 
             {/* Content "Paper" */}
             <div className="mt-[-40px] relative z-20 mx-4 md:mx-12 p-8 md:p-16 rounded-[3rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100">
-              <div className="prose prose-slate max-w-none">
-                <div className="text-xl md:text-3xl font-medium leading-[1.8] text-slate-700 space-y-8 first-letter:text-5xl first-letter:font-black first-letter:text-primary first-letter:mr-3 first-letter:float-left">
-                  {isLoggedIn ? (
-                    <div className="whitespace-pre-wrap">{story.content}</div>
-                  ) : (
-                    <div className="whitespace-pre-wrap italic opacity-80">{story.preview}</div>
-                  )}
-                </div>
-              </div>
-
-              {!isLoggedIn && (
-                <div className="mt-16 pt-16 border-t-4 border-dotted border-slate-100 relative">
-                  <div className="absolute inset-x-0 -top-24 h-24 bg-gradient-to-t from-white to-transparent" />
-                  
-                  <div className="flex flex-col items-center text-center space-y-8">
-                    <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center text-amber-400 shadow-inner">
-                      <Lock size={32} strokeWidth={2.5} />
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-2xl md:text-3xl font-black font-header text-slate-800 tracking-tight">Ups! Ceritanya Masih Terkunci 🔐</h3>
-                      <p className="text-slate-400 font-bold max-w-sm mx-auto leading-relaxed">
-                        Ayo Masuk atau Daftar untuk mengikuti petualangan seru ini sampai akhir!
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-4">
-                      <Link href="/auth/register" className="btn-primary scale-110 hover:scale-125 transition-transform shadow-xl">Daftar Sekarang</Link>
-                      <Link href="/auth/login" className="px-8 py-4 rounded-2xl bg-slate-100 font-black text-slate-600 hover:bg-slate-200 transition-colors shadow-lg">Masuk Saja</Link>
-                    </div>
+              {isLoggedIn ? (
+                  <StoryReader 
+                      storyId={story.id}
+                      userId={session.user.id}
+                      pages={displayPages}
+                      initialPage={pin?.pageNumber || 1}
+                      initialFavorites={favorites}
+                      isCompleted={!!progress}
+                  />
+              ) : (
+                  <div className="prose prose-slate max-w-none">
+                     <div className="text-xl md:text-3xl font-medium leading-[1.8] text-slate-700 space-y-8 first-letter:text-5xl first-letter:font-black first-letter:text-primary first-letter:mr-3 first-letter:float-left">
+                        <div className="whitespace-pre-wrap italic opacity-80">{story.preview}</div>
+                     </div>
+                     
+                     <div className="mt-16 pt-16 border-t-4 border-dotted border-slate-100 relative">
+                        <div className="absolute inset-x-0 -top-24 h-24 bg-gradient-to-t from-white to-transparent" />
+                        
+                        <div className="flex flex-col items-center text-center space-y-8">
+                           <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center text-amber-400 shadow-inner">
+                              <Lock size={32} strokeWidth={2.5} />
+                           </div>
+                           <div className="space-y-3">
+                              <h3 className="text-2xl md:text-3xl font-black font-header text-slate-800 tracking-tight">Ups! Ceritanya Masih Terkunci 🔐</h3>
+                              <p className="text-slate-400 font-bold max-w-sm mx-auto leading-relaxed">
+                                 Ayo Masuk atau Daftar untuk mengikuti petualangan seru ini sampai akhir!
+                              </p>
+                           </div>
+                           <div className="flex flex-wrap justify-center gap-4">
+                              <Link href="/auth/register" className="btn-primary scale-110 hover:scale-125 transition-transform shadow-xl">Daftar Sekarang</Link>
+                              <Link href="/auth/login" className="px-8 py-4 rounded-2xl bg-slate-100 font-black text-slate-600 hover:bg-slate-200 transition-colors shadow-lg">Masuk Saja</Link>
+                           </div>
+                        </div>
+                     </div>
                   </div>
-                </div>
-              )}
-
-              {isLoggedIn && (
-                <div className="mt-16 pt-10 border-t-2 border-slate-50 space-y-12">
-                   <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                      <div className="flex items-center gap-3 text-emerald-500 font-black text-sm md:text-base bg-emerald-50 px-5 py-2.5 rounded-2xl border border-emerald-100">
-                          <Unlock size={20} /> Cerita Berhasil Dibuka!
-                      </div>
-                      <button className="flex items-center gap-2 text-primary font-black text-base hover:scale-105 transition-transform bg-primary/5 px-5 py-2.5 rounded-full border border-primary/20">
-                          <Speaker size={20} /> Dengarkan Cerita 🎧
-                      </button>
-                   </div>
-
-                   {/* Mark As Finished Section */}
-                   <div className="flex flex-col items-center justify-center py-10 text-center space-y-6 bg-slate-50/50 rounded-[3rem] p-8 border border-slate-100">
-                      <div className="space-y-2">
-                        <h4 className="text-xl font-black text-slate-800 tracking-tight">Sudah Selesai Membaca?</h4>
-                        <p className="text-slate-400 font-bold text-sm">Klik tombol di bawah untuk menambah poin petualangmu!</p>
-                      </div>
-                      <MarkAsFinished 
-                        storyId={story.id} 
-                        userId={session.user.id} 
-                        isCompleted={!!progress} 
-                      />
-                   </div>
-                </div>
               )}
             </div>
           </div>
         </article>
       </div>
+
 
       {/* Decorative Garden at Footer */}
       <div className="fixed bottom-0 inset-x-0 h-24 pointer-events-none flex items-end justify-between px-10 opacity-30">

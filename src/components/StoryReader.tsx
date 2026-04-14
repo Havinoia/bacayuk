@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
     ChevronLeft, 
     ChevronRight, 
@@ -38,6 +38,7 @@ export function StoryReader({
     isCompleted
 }: StoryReaderProps) {
     const router = useRouter();
+    const readerRef = useRef<HTMLDivElement>(null);
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pinnedPage, setPinnedPage] = useState<number | null>(initialPage);
     const [favorites, setFavorites] = useState<number[]>(initialFavorites);
@@ -83,18 +84,30 @@ export function StoryReader({
         }
     };
 
+    const scrollToContent = () => {
+        if (readerRef.current) {
+            // Calculate offset to account for some padding/header if necessary, 
+            // but standard scrollIntoView is usually enough for "fokus ke div"
+            readerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     const goToNext = () => {
-        if (!isLastPage) setCurrentPage(currentPage + 1);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (!isLastPage) {
+            setCurrentPage(currentPage + 1);
+            scrollToContent();
+        }
     };
 
     const goToPrev = () => {
-        if (!isFirstPage) setCurrentPage(currentPage - 1);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (!isFirstPage) {
+            setCurrentPage(currentPage - 1);
+            scrollToContent();
+        }
     };
 
     return (
-        <div className="space-y-12">
+        <div ref={readerRef} className="space-y-12 scroll-mt-24">
             {/* Action Bar */}
             <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-sm">
                 <div className="flex items-center gap-4">

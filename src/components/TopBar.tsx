@@ -43,23 +43,7 @@ export function TopBar() {
 
     return (
         <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md px-6 py-4 flex items-center gap-4 w-full border-b border-black/5">
-            {/* Logo (mobile only, desktop has sidebar) */}
-            <Link href="/dashboard" className="lg:hidden w-10 h-10 bg-[var(--base-color-pinterest-red)] rounded-full flex items-center justify-center text-white shrink-0 hover:opacity-90 transition-opacity pr-0.5">
-                <span className="font-black text-xl italic leading-none">B</span>
-            </Link>
 
-            {/* Nav Links */}
-            <div className="hidden md:flex items-center gap-1 shrink-0 px-2 lg:px-4">
-                <Link href="/dashboard" className={`px-5 py-3 rounded-full font-bold text-[14px] transition-all ${isHome ? "bg-[var(--base-color-plum-black)] text-white" : "hover:bg-[var(--base-color-sand-gray)] text-[var(--base-color-plum-black)]"}`}>
-                    Beranda
-                </Link>
-                <Link href="/dashboard/collections" className={`px-5 py-3 rounded-full font-bold text-[14px] transition-all ${isCollections ? "bg-[var(--base-color-plum-black)] text-white" : "hover:bg-[var(--base-color-sand-gray)] text-[var(--base-color-plum-black)]"}`}>
-                    Jelajahi
-                </Link>
-                <Link href="/dashboard/quests" className={`px-5 py-3 rounded-full font-bold text-[14px] transition-all ${isQuests ? "bg-[var(--base-color-plum-black)] text-white" : "hover:bg-[var(--base-color-sand-gray)] text-[var(--base-color-plum-black)]"}`}>
-                    Misi
-                </Link>
-            </div>
             
             {/* Search Bar */}
             <form onSubmit={handleSearchSubmit} className="flex-1 relative group mx-2">

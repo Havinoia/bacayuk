@@ -145,12 +145,6 @@ export function StoryReader({
 
             {/* Content Display */}
             <div className="relative group min-h-[400px]">
-                {/* Visual Cue */}
-                <div className="absolute inset-x-0 -top-6 flex justify-center z-30">
-                     <div className="bg-[var(--base-color-pinterest-red)] text-white px-8 py-2 rounded-full font-black text-sm shadow-xl animate-bounce">
-                        Pelajaran Berharga...
-                     </div>
-                </div>
 
                 {/* Animated Page Container */}
                 <div 

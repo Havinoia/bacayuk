@@ -8,10 +8,22 @@ import { useDebounce } from "@/hooks/use-debounce";
 export function SearchInput() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [value, setValue] = useState(searchParams.get("q") || "");
+    const searchQuey = searchParams.get("q") || "";
+    const [value, setValue] = useState(searchQuey);
     const debouncedValue = useDebounce<string>(value, 500);
 
+    // Sync input local state with URL changes (e.g. when clicking filter links)
     useEffect(() => {
+        setValue(searchQuey);
+    }, [searchQuey]);
+
+    useEffect(() => {
+        const currentQuery = searchParams.get("q") || "";
+        
+        // CRITICAL FIX: Only update URL if the search value is actually different 
+        // from what's already there. Prevents the infinite loop.
+        if (debouncedValue === currentQuery) return;
+
         const params = new URLSearchParams(searchParams.toString());
         if (debouncedValue) {
             params.set("q", debouncedValue);

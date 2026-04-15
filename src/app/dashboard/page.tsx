@@ -18,12 +18,7 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
-  const userName = session.user.name || "Pahlawan";
-
-  // Get Hero current role and stats
-  const currentHero = await db.query.heroes.findFirst({
-    where: eq(heroes.userId, session.user.id)
-  });
+  const userName = session.user.name || "Teman";
 
   // Calculate Reading Progress
   const [totalStoriesResult] = await db.select({ value: count() }).from(stories);
@@ -63,7 +58,7 @@ export default async function DashboardPage() {
           </h1>
 
           <p className="text-lg text-[var(--base-color-olive-gray)] max-w-xl mx-auto">
-             Kamu sudah membaca {completedCount} dari {totalStories} cerita. Ayo lanjutkan petualanganmu!
+             Kamu sudah membaca {completedCount} dari {totalStories} cerita. Ayo teruskan membaca!
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -71,7 +66,7 @@ export default async function DashboardPage() {
                  Mulai Membaca Sekarang
               </Link>
               <Link href="/dashboard/quests" className="btn-pin-secondary py-4 px-8 text-black text-lg">
-                 Lihat Misi Harian
+                 Misi Harian
               </Link>
           </div>
       </section>
@@ -109,7 +104,7 @@ export default async function DashboardPage() {
               </MasonryGrid>
           </div>
 
-          {/* Right Column: Profile & Quests */}
+          {/* Right Column: Quests */}
           <div className="w-full lg:w-80 shrink-0 lg:sticky lg:top-24 h-fit space-y-10">
               {/* Misi Harian */}
               <section className="space-y-6">
@@ -132,7 +127,7 @@ export default async function DashboardPage() {
                                       </div>
                                       <div className="flex-1 overflow-hidden">
                                           <h5 className="font-bold text-[13px] text-[var(--base-color-plum-black)] line-clamp-1">{uq.quest.title}</h5>
-                                          <p className="text-[10px] font-medium text-[var(--base-color-olive-gray)] uppercase">+{uq.quest.xpReward} XP</p>
+                                          <p className="text-[10px] font-medium text-[var(--base-color-olive-gray)] uppercase">Berhadiah Poin</p>
                                       </div>
                                       <ChevronRight size={16} className="text-[var(--base-color-olive-gray)] opacity-0 group-hover:opacity-100 transition-opacity" />
                                   </div>

@@ -10,7 +10,7 @@ interface MasonryGridProps {
 export const MasonryGrid = ({ children }: MasonryGridProps) => {
   return (
     <div className="w-full">
-      <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-6 space-y-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-10">
         {children}
       </div>
     </div>

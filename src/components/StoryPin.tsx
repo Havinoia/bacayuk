@@ -25,10 +25,10 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug }: StoryP
   };
 
   return (
-    <div className="group break-inside-avoid mb-6 animate-pin-enter">
+    <div className="group animate-pin-enter">
       <Link href={`/story/${slug}`} className="block">
         {/* Visual Container */}
-        <div className="relative overflow-hidden rounded-[24px] bg-[var(--base-color-warm-light)] cursor-zoom-in group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all duration-700">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-[var(--base-color-warm-light)] cursor-zoom-in group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all duration-700">
           
           {/* Subtle Background Gradient (Fallback for slow loading) */}
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--base-color-sand-gray)] to-[var(--base-color-warm-light)]" />
@@ -38,7 +38,7 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug }: StoryP
             src={thumbnailUrl || fallbackImage} 
             alt={title}
             loading="lazy"
-            className="w-full h-auto object-cover relative z-10 transition-transform duration-1000 group-hover:scale-105"
+            className="w-full h-full object-cover relative z-10 transition-transform duration-1000 group-hover:scale-105"
           />
 
           {/* High-Contrast Interactive Overlay */}
@@ -76,10 +76,12 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug }: StoryP
         </div>
 
         {/* Typography & Metadata (Compact Hierarchy) */}
-        <div className="mt-2 px-0.5 space-y-1">
-          <h3 className="text-[13px] font-bold leading-[1.3] text-[var(--base-color-plum-black)] line-clamp-2 tracking-tight group-hover:text-[var(--base-color-pinterest-red)] transition-colors">
-            {title}
-          </h3>
+        <div className="mt-4 px-0.5 space-y-1">
+          <div className="min-h-[38px] flex flex-col justify-start">
+            <h3 className="text-[13px] font-bold leading-[1.3] text-[var(--base-color-plum-black)] line-clamp-2 tracking-tight group-hover:text-[var(--base-color-pinterest-red)] transition-colors">
+              {title}
+            </h3>
+          </div>
           <div className="flex items-center gap-2 pt-0.5">
             <div className="w-5 h-5 rounded-full bg-[var(--base-color-sand-gray)] flex items-center justify-center text-[8px] font-black text-[var(--base-color-plum-black)] uppercase border border-black/5">
                 {author?.charAt(0) || "B"}

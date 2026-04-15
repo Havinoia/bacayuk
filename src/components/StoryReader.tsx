@@ -145,14 +145,19 @@ export function StoryReader({
 
             {/* Content Display */}
             <div className="relative group min-h-[400px]">
+                {/* Visual Cue */}
                 <div className="absolute inset-x-0 -top-6 flex justify-center z-30">
-                     <div className="bg-primary text-white px-8 py-2 rounded-full font-black text-sm shadow-xl animate-bounce">
+                     <div className="bg-[var(--base-color-pinterest-red)] text-white px-8 py-2 rounded-full font-black text-sm shadow-xl animate-bounce">
                         Pelajaran Berharga...
                      </div>
                 </div>
 
-                <div className="prose prose-slate max-w-none">
-                    <div className="text-xl md:text-3xl font-medium leading-[1.8] text-slate-700 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                {/* Animated Page Container */}
+                <div 
+                    key={currentPage}
+                    className="prose prose-slate max-w-none animate-in fade-in slide-in-from-right-8 duration-700 ease-out"
+                >
+                    <div className="text-xl md:text-3xl font-medium leading-[1.8] text-slate-700 space-y-8">
                         <div className="whitespace-pre-wrap first-letter:text-5xl first-letter:font-black first-letter:text-primary first-letter:mr-3 first-letter:float-left">
                             {currentPageData.content}
                         </div>

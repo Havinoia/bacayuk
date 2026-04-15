@@ -1,47 +1,130 @@
 "use client";
 
-import { Search, Bell, Sparkles } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Search, Bell, LogOut, Settings, User } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 
 export function TopBar() {
     const { data: session } = authClient.useSession();
+    const router = useRouter();
+    const pathname = usePathname();
+    const [searchValue, setSearchValue] = useState("");
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchValue.trim()) {
+            router.push(`/dashboard/collections?q=${encodeURIComponent(searchValue.trim())}`);
+        }
+    };
+
+    const handleSignOut = async () => {
+        await authClient.signOut();
+        router.push("/auth/login");
+    };
+
+    // Close dropdown on click outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const isHome = pathname === "/dashboard";
+    const isCollections = pathname.startsWith("/dashboard/collections");
+    const isQuests = pathname.startsWith("/dashboard/quests");
 
     return (
-        <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] px-6 py-4 flex justify-between items-center w-full border-b border-black/5">
-            <div className="flex items-center gap-8">
-                <h1 className="text-2xl font-black font-header tracking-tight text-primary bg-clip-text bg-gradient-to-r from-primary to-blue-600">
-                    Magical Academy
-                </h1>
-                
-                <div className="hidden lg:flex items-center gap-2 bg-muted/50 px-4 py-2 rounded-full border border-black/5 w-80 group focus-within:bg-white transition-all">
-                    <Search size={16} className="text-foreground/40 group-focus-within:text-primary" />
-                    <input 
-                        type="text" 
-                        placeholder="Search for spells or books..." 
-                        className="bg-transparent border-none focus:ring-0 text-sm font-bold w-full placeholder:text-foreground/20"
-                    />
-                </div>
-            </div>
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md px-6 py-4 flex items-center gap-4 w-full border-b border-black/5">
+            {/* Logo (mobile only, desktop has sidebar) */}
+            <Link href="/dashboard" className="lg:hidden w-10 h-10 bg-[var(--base-color-pinterest-red)] rounded-full flex items-center justify-center text-white shrink-0 hover:opacity-90 transition-opacity pr-0.5">
+                <span className="font-black text-xl italic leading-none">B</span>
+            </Link>
 
-            <div className="flex items-center gap-4">
-                <button className="p-2.5 rounded-full hover:bg-primary/5 transition-all text-foreground/40 hover:text-primary relative group">
-                    <Bell size={20} />
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-                </button>
+            {/* Nav Links */}
+            <div className="hidden md:flex items-center gap-1 shrink-0 px-2 lg:px-4">
+                <Link href="/dashboard" className={`px-5 py-3 rounded-full font-bold text-[14px] transition-all ${isHome ? "bg-[var(--base-color-plum-black)] text-white" : "hover:bg-[var(--base-color-sand-gray)] text-[var(--base-color-plum-black)]"}`}>
+                    Beranda
+                </Link>
+                <Link href="/dashboard/collections" className={`px-5 py-3 rounded-full font-bold text-[14px] transition-all ${isCollections ? "bg-[var(--base-color-plum-black)] text-white" : "hover:bg-[var(--base-color-sand-gray)] text-[var(--base-color-plum-black)]"}`}>
+                    Jelajahi
+                </Link>
+                <Link href="/dashboard/quests" className={`px-5 py-3 rounded-full font-bold text-[14px] transition-all ${isQuests ? "bg-[var(--base-color-plum-black)] text-white" : "hover:bg-[var(--base-color-sand-gray)] text-[var(--base-color-plum-black)]"}`}>
+                    Misi
+                </Link>
+            </div>
+            
+            {/* Search Bar */}
+            <form onSubmit={handleSearchSubmit} className="flex-1 relative group mx-2">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--base-color-olive-gray)] opacity-50 group-focus-within:opacity-100 transition-opacity" size={18} />
+                <input 
+                    type="text" 
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder="Cari cerita ajaib..." 
+                    className="w-full bg-[var(--base-color-sand-gray)] border-none rounded-full py-3.5 pl-12 pr-6 font-medium text-[15px] focus:ring-4 focus:ring-[var(--base-color-pinterest-red)]/10 transition-all placeholder:text-[var(--base-color-olive-gray)]/50 outline-none"
+                />
+            </form>
+
+            {/* Profile & Dropdown */}
+            <div className="flex items-center gap-1 shrink-0 relative" ref={dropdownRef}>
+                <Link href="/dashboard/quests" className="btn-pin-circle relative border-none">
+                    <Bell size={22} />
+                </Link>
                 
-                <button className="p-2.5 rounded-full hover:bg-primary/5 transition-all text-primary">
-                    <Sparkles size={20} />
+                <button 
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="btn-pin-circle border-none overflow-hidden p-0 ml-1 active:scale-95 transition-transform"
+                >
+                    {session?.user?.image ? (
+                        <img src={session.user.image} alt="User" className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-tr from-[var(--base-color-sand-gray)] to-[var(--base-color-warm-light)] flex items-center justify-center text-[12px] font-black uppercase">
+                            {session?.user?.name?.charAt(0) || "U"}
+                        </div>
+                    )}
                 </button>
-                
-                <div className="flex items-center gap-3 pl-2">
-                    <div className="text-right hidden sm:block">
-                        <p className="text-sm font-black text-foreground leading-none">{session?.user?.name}</p>
-                        <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 italic">Apprentice</p>
+
+                {/* Pinterest Style Dropdown Menu */}
+                {showDropdown && (
+                    <div className="absolute top-14 right-0 w-72 bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-black/5 p-4 animate-in fade-in zoom-in-95 duration-200">
+                        <div className="px-4 py-3 mb-2">
+                            <p className="text-[14px] font-medium text-[var(--base-color-olive-gray)]">Akun Anda</p>
+                            <div className="flex items-center gap-3 mt-3 p-2 rounded-2xl bg-[var(--base-color-warm-light)]/30 border border-black/5">
+                                <div className="w-10 h-10 rounded-full bg-[var(--base-color-sand-gray)] flex items-center justify-center text-xs font-black">
+                                    {session?.user?.name?.charAt(0) || "U"}
+                                </div>
+                                <div className="overflow-hidden">
+                                    <p className="font-bold text-[14px] truncate text-[var(--base-color-plum-black)]">{session?.user?.name}</p>
+                                    <p className="text-[12px] text-[var(--base-color-olive-gray)] truncate">{session?.user?.email}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <Link href="/dashboard/profile" className="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-[var(--base-color-sand-gray)] transition-colors text-[14px] font-bold text-[var(--base-color-plum-black)]">
+                                <User size={18} /> Profil
+                            </Link>
+                            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-[var(--base-color-sand-gray)] transition-colors text-[14px] font-bold text-[var(--base-color-plum-black)] text-left">
+                                <Settings size={18} /> Pengaturan
+                            </button>
+                            <div className="h-px bg-black/5 my-2 mx-4" />
+                            <button 
+                                onClick={handleSignOut}
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-red-50 text-[14px] font-bold text-red-600 transition-colors text-left"
+                            >
+                                <LogOut size={18} /> Keluar
+                            </button>
+                        </div>
                     </div>
-                    <div className="h-10 w-10 rounded-2xl overflow-hidden border-2 border-primary/20 bg-primary/10 flex items-center justify-center text-primary font-black shadow-inner">
-                        {session?.user?.name?.charAt(0) || "U"}
-                    </div>
-                </div>
+                )}
             </div>
         </header>
     );

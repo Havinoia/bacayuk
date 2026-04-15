@@ -3,11 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
-    BookOpen, 
-    Sword, 
-    School, 
-    Settings, 
-    Wand2, 
+    Home,
+    BookOpen,
+    Trophy,
     User 
 } from "lucide-react";
 
@@ -15,40 +13,23 @@ export function BottomNav() {
     const pathname = usePathname();
 
     const navItems = [
-        { label: "Library", icon: BookOpen, href: "/dashboard/collections" },
-        { label: "Quests", icon: Sword, href: "/dashboard/quests" },
-        { label: "Academy", icon: School, href: "/dashboard" },
-        { label: "Profile", icon: User, href: "/dashboard/settings" },
+        { label: "Beranda", icon: Home, href: "/dashboard" },
+        { label: "Koleksi", icon: BookOpen, href: "/dashboard/collections" },
+        { label: "Misi", icon: Trophy, href: "/dashboard/quests" },
+        { label: "Profil", icon: User, href: "/dashboard/profile" },
     ];
 
     return (
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-black/5 px-6 py-4 flex justify-between items-center z-50">
-            {navItems.slice(0, 2).map((item) => {
-                const isActive = pathname === item.href;
+        <nav className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-black/5 rounded-full px-6 py-3 flex items-center gap-8 z-50 shadow-2xl">
+            {navItems.map((item) => {
+                const isActive = item.href === "/dashboard" 
+                    ? pathname === item.href 
+                    : pathname.startsWith(item.href);
                 return (
-                    <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1">
-                        <item.icon size={22} className={isActive ? "text-primary" : "text-foreground/40"} />
-                        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? "text-primary" : "text-foreground/40"}`}>
-                            {item.label}
-                        </span>
-                    </Link>
-                );
-            })}
-
-            <div className="relative -mt-12">
-                <button className="w-16 h-16 rounded-full bg-primary text-white shadow-2xl shadow-primary/40 flex items-center justify-center border-4 border-white active:scale-90 transition-all">
-                    <Wand2 size={24} />
-                </button>
-            </div>
-
-            {navItems.slice(2).map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                    <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1">
-                        <item.icon size={22} className={isActive ? "text-primary" : "text-foreground/40"} />
-                        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? "text-primary" : "text-foreground/40"}`}>
-                            {item.label}
-                        </span>
+                    <Link key={item.label} href={item.href} className="relative flex flex-col items-center gap-1">
+                        <item.icon size={24} className={isActive ? "text-[var(--base-color-plum-black)]" : "text-[var(--base-color-olive-gray)] opacity-50"} strokeWidth={isActive ? 3 : 2} />
+                        <span className={`text-[9px] font-black uppercase tracking-wider ${isActive ? "text-[var(--base-color-plum-black)]" : "text-[var(--base-color-olive-gray)] opacity-50"}`}>{item.label}</span>
+                        {isActive && <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[var(--base-color-pinterest-red)] rounded-full" />}
                     </Link>
                 );
             })}

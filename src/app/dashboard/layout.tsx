@@ -1,29 +1,16 @@
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
 import { BottomNav } from "@/components/BottomNav";
-import { db } from "@/db";
-import { auth } from "@/lib/auth";
-import { heroes } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
-
-  const currentHero = session?.user ? await db.query.heroes.findFirst({
-    where: eq(heroes.userId, session.user.id)
-  }) : null;
-
   return (
-    <div className="min-h-screen flex bg-surface">
+    <div className="min-h-screen flex bg-white">
       {/* Navigation Sidebar (Desktop) */}
-      <Sidebar userRole={currentHero?.role} />
+      <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top App Bar */}
@@ -34,9 +21,9 @@ export default async function DashboardLayout({
           {children}
         </main>
         
-        {/* Footer (Simplified) */}
-        <footer className="border-t border-black/5 bg-white/50 backdrop-blur-sm py-6 px-10">
-          <div className="max-w-7xl mx-auto flex justify-between items-center text-foreground/40 text-[10px] font-black uppercase tracking-widest">
+        {/* Footer */}
+        <footer className="border-t border-black/5 bg-white py-6 px-10">
+          <div className="max-w-7xl mx-auto flex justify-between items-center text-[var(--base-color-olive-gray)] text-[10px] font-black uppercase tracking-widest">
             <span>&copy; 2026 Bacayuk</span>
             <span className="italic">Dibuat dengan cinta untuk anak Indonesia</span>
           </div>
@@ -48,3 +35,4 @@ export default async function DashboardLayout({
     </div>
   );
 }
+

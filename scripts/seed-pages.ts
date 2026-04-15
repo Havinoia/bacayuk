@@ -26,18 +26,23 @@ async function main() {
     for (const story of allStories) {
         console.log(`Creating pages for: ${story.title}`);
         
-        // Split existing content into 3 simple pages based on double newlines or just manually for demo
-        const contentParts = story.content.split("\n\n");
+        // Split existing content into paragraphs
+        const paragraphs = story.content.split("\n\n").filter(p => p.trim() !== "");
         
-        const pagesToInsert = contentParts.map((part, index) => ({
-            storyId: story.id,
-            pageNumber: index + 1,
-            content: part,
-        }));
+        const pagesToInsert = [];
+        // Group every 2 paragraphs into 1 page
+        for (let i = 0; i < paragraphs.length; i += 2) {
+            const pageContent = paragraphs.slice(i, i + 2).join("\n\n");
+            pagesToInsert.push({
+                storyId: story.id,
+                pageNumber: Math.floor(i / 2) + 1,
+                content: pageContent,
+            });
+        }
 
         if (pagesToInsert.length > 0) {
             await db.insert(storyPagesTable).values(pagesToInsert);
-            console.log(`Inserted ${pagesToInsert.length} pages for story ${story.id}`);
+            console.log(`Inserted ${pagesToInsert.length} pages for story ${story.id} (2 paragraphs per page)`);
         }
     }
 

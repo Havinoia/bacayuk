@@ -66,7 +66,7 @@ export default async function CollectionsPage({
             href="/dashboard/collections"
             className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 ${
               !selectedCatId 
-                ? "bg-primary text-white shadow-primary/30 -rotate-2" 
+                ? "bg-primary text-white shadow-primary/30" 
                 : "bg-white text-foreground/40 hover:text-primary hover:bg-primary/5"
             }`}
           >
@@ -78,8 +78,8 @@ export default async function CollectionsPage({
               href={`/dashboard/collections?cat=${cat.id}`}
               className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 ${
                 selectedCatId === cat.id 
-                  ? "bg-secondary text-white shadow-secondary/30 rotate-2" 
-                  : "bg-white text-foreground/40 hover:text-secondary hover:bg-secondary/5"
+                  ? "bg-primary text-white shadow-primary/30" 
+                  : "bg-white text-foreground/40 hover:text-primary hover:bg-primary/5"
               }`}
             >
               {cat.name}

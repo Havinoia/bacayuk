@@ -27,6 +27,11 @@ export default async function ProfilePage() {
     .where(eq(readingProgress.userId, session.user.id));
   const completedCount = Number(completedStoriesResult.value);
 
+  // Fetch Hero Data (Points)
+  const hero = await db.query.heroes.findFirst({
+    where: eq(heroes.userId, session.user.id)
+  });
+
   return (
     <div className="min-h-screen bg-white pb-20 px-6 pt-10 animate-pin-enter">
       <div className="max-w-4xl mx-auto space-y-12">
@@ -69,7 +74,7 @@ export default async function ProfilePage() {
         </section>
 
         {/* Achievement Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="bg-[var(--base-color-warm-light)] p-8 rounded-[32px] space-y-4 hover:shadow-xl transition-all border border-black/5">
               <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-[var(--base-color-pinterest-red)] shadow-sm">
                  <BookOpen size={24} />
@@ -77,6 +82,16 @@ export default async function ProfilePage() {
               <div className="space-y-1">
                  <p className="text-4xl font-black text-[var(--base-color-plum-black)]">{completedCount}</p>
                  <p className="text-sm font-bold text-[var(--base-color-olive-gray)] uppercase tracking-widest">Cerita Selesai</p>
+              </div>
+           </div>
+
+           <div className="bg-[var(--base-color-warm-light)] p-8 rounded-[32px] space-y-4 hover:shadow-xl transition-all border border-black/5">
+              <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-amber-500 shadow-sm">
+                 <Trophy size={24} />
+              </div>
+              <div className="space-y-1">
+                 <p className="text-4xl font-black text-[var(--base-color-plum-black)]">{hero?.points || 0}</p>
+                 <p className="text-sm font-bold text-[var(--base-color-olive-gray)] uppercase tracking-widest">Poin Aktivitas</p>
               </div>
            </div>
 

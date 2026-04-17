@@ -55,8 +55,8 @@ export default function RegisterPage() {
                         B
                     </div>
                 </Link>
-                <h1 className="text-4xl md:text-5xl font-black text-foreground mb-3 tracking-tighter">Ayo <span className="text-primary italic">Bergabung!</span></h1>
-                <p className="text-foreground/40 font-bold">Mulai petualangan membacamu hari ini.</p>
+                <h1 className="text-4xl md:text-5xl font-black text-foreground mb-3 tracking-tighter">Daftar</h1>
+                <p className="text-foreground/40 font-bold">Buat akun Anda untuk mulai membaca cerita ajaib.</p>
             </div>
 
             <div className="bg-white p-8 md:p-12 rounded-[3.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.05)] border-4 border-white">
@@ -68,7 +68,7 @@ export default function RegisterPage() {
                     )}
 
                     <div className="space-y-2">
-                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Nama Panggilanmu</label>
+                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Nama Lengkap</label>
                          <div className="relative group">
                             <User className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
                             <input 
@@ -83,7 +83,7 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="space-y-2">
-                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Alamat Email Kita</label>
+                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Email</label>
                          <div className="relative group">
                             <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
                             <input 
@@ -98,7 +98,7 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="space-y-2">
-                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Kata Sandi Rahasia</label>
+                         <label className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30 px-4">Password</label>
                          <div className="relative group">
                             <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-primary transition-colors" size={20} />
                             <input 
@@ -120,16 +120,14 @@ export default function RegisterPage() {
                         {loading ? (
                             <Loader2 className="animate-spin" size={24} />
                         ) : (
-                            <>
-                                ✨ Buat Akun Ajaib ✨
-                            </>
+                            "Daftar"
                         )}
                     </button>
                 </form>
             </div>
 
             <p className="text-center mt-10 text-foreground/40 font-black">
-                Sudah punya kunci? <Link href="/auth/login" className="text-primary hover:underline italic">Masuk Sini!</Link>
+                Sudah punya akun? <Link href="/auth/login" className="text-primary hover:underline italic">Masuk</Link>
             </p>
         </div>
     </div>

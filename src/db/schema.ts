@@ -142,6 +142,19 @@ export const storyPageFavorites = pgTable("story_page_favorites", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Notifications Table
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  type: text("type").notNull(), // NEW_STORY, REMINDER
+  link: text("link"), // Optional link to a story
+  isRead: boolean("is_read").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+
 
 // Relations
 export const userRelations = relations(user, ({ one, many }) => ({
@@ -155,6 +168,7 @@ export const userRelations = relations(user, ({ one, many }) => ({
   readingProgress: many(readingProgress),
   storyPins: many(storyPins),
   favorites: many(storyPageFavorites),
+  notifications: many(notifications),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -245,6 +259,13 @@ export const userQuestsRelations = relations(userQuests, ({ one }) => ({
   quest: one(quests, {
     fields: [userQuests.questId],
     references: [quests.id],
+  }),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user: one(user, {
+    fields: [notifications.userId],
+    references: [user.id],
   }),
 }));
 

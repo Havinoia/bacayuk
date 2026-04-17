@@ -5,8 +5,17 @@ import { Search, Bell, LogOut, Settings, User } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { NotificationDropdown } from "./NotificationDropdown";
 
-export function TopBar({ initialPoints = 0 }: { initialPoints?: number }) {
+export function TopBar({ 
+    initialPoints = 0, 
+    initialNotifications = [],
+    userId = ""
+}: { 
+    initialPoints?: number,
+    initialNotifications?: any[],
+    userId?: string
+}) {
     const { data: session } = authClient.useSession();
     const router = useRouter();
     const pathname = usePathname();
@@ -70,13 +79,14 @@ export function TopBar({ initialPoints = 0 }: { initialPoints?: number }) {
                     <span className="text-[16px] font-black text-[var(--base-color-pinterest-red)]">{points}</span>
                 </div>
 
-                <Link href="/dashboard/quests" className="btn-pin-circle relative border-none">
-                    <Bell size={22} />
-                </Link>
+                <NotificationDropdown 
+                    initialNotifications={initialNotifications} 
+                    userId={userId} 
+                />
                 
                 <button 
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="btn-pin-circle border-none overflow-hidden p-0 ml-1 active:scale-95 transition-transform"
+                    className="btn-pin-circle cursor-pointer border-none overflow-hidden p-0 ml-1 active:scale-95 transition-transform"
                 >
                     {session?.user?.image ? (
                         <img src={session.user.image} alt="User" className="w-full h-full object-cover" />

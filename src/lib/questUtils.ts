@@ -16,6 +16,9 @@ export async function ensureDailyQuests(userId: string) {
             eq(userQuests.userId, userId),
             gte(userQuests.assignedAt, today)
         ),
+        with: {
+            quest: true
+        }
     });
 
     // If they have quests from today, we are done

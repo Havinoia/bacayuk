@@ -20,7 +20,7 @@ export function BottomNav() {
     ];
 
     return (
-        <nav className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-black/5 rounded-full px-6 py-3 flex items-center gap-8 z-50 shadow-2xl">
+        <nav className="lg:hidden relative mt-10 mb-10 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-black/5 rounded-full px-6 py-3 flex items-center gap-8 z-50 shadow-2xl w-fit">
             {navItems.map((item) => {
                 const isActive = item.href === "/dashboard" 
                     ? pathname === item.href 

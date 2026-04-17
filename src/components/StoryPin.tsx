@@ -11,9 +11,10 @@ interface StoryPinProps {
   author?: string;
   category: { name: string } | string;
   slug: string;
+  isFeatured?: boolean;
 }
 
-export const StoryPin = ({ title, thumbnailUrl, author, category, slug }: StoryPinProps) => {
+export const StoryPin = ({ title, thumbnailUrl, author, category, slug, isFeatured = false }: StoryPinProps) => {
   const categoryName = typeof category === 'string' ? category : category.name;
   
   // Custom fallback image path (served from public folder)
@@ -28,7 +29,7 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug }: StoryP
     <div className="group animate-pin-enter">
       <Link href={`/story/${slug}`} className="block">
         {/* Visual Container */}
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-[var(--base-color-warm-light)] cursor-zoom-in group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all duration-700">
+        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-[var(--base-color-warm-light)] cursor-zoom-in border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700 ${isFeatured ? 'animate-float' : ''}`}>
           
           {/* Subtle Background Gradient (Fallback for slow loading) */}
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--base-color-sand-gray)] to-[var(--base-color-warm-light)]" />
@@ -76,9 +77,9 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug }: StoryP
         </div>
 
         {/* Typography & Metadata (Compact Hierarchy) */}
-        <div className="mt-4 px-0.5 space-y-1">
-          <div className="min-h-[38px] flex flex-col justify-start">
-            <h3 className="text-[13px] font-bold leading-[1.3] text-[var(--base-color-plum-black)] line-clamp-2 tracking-tight group-hover:text-[var(--base-color-pinterest-red)] transition-colors">
+        <div className="mt-5 px-1 space-y-2">
+          <div className="min-h-[44px] flex flex-col justify-start">
+            <h3 className={`${isFeatured ? 'text-[24px]' : 'text-[13px]'} font-black leading-[1.05] text-[var(--base-color-plum-black)] line-clamp-2 tracking-tighter group-hover:text-[var(--base-color-pinterest-red)] transition-colors uppercase`}>
               {title}
             </h3>
           </div>

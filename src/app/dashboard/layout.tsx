@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { db } from "@/db";
 import { heroes } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { generateInactivityReminders, getNotifications } from "@/lib/notificationUtils";
 
 export default async function DashboardLayout({
   children,
@@ -20,6 +21,13 @@ export default async function DashboardLayout({
     where: eq(heroes.userId, session.user.id)
   }) : null;
 
+  // Process Notifications & Reminders (Lazy Check)
+  let notifications: any[] = [];
+  if (session?.user) {
+    await generateInactivityReminders(session.user.id);
+    notifications = await getNotifications(session.user.id);
+  }
+
   return (
     <div className="min-h-screen flex bg-white">
       {/* Navigation Sidebar (Desktop) */}
@@ -27,7 +35,11 @@ export default async function DashboardLayout({
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top App Bar */}
-        <TopBar initialPoints={hero?.points || 0} />
+        <TopBar 
+          initialPoints={hero?.points || 0} 
+          initialNotifications={notifications}
+          userId={session?.user?.id || ""}
+        />
 
         {/* Main Content Area */}
         <main className="flex-1 w-full pb-32 lg:pb-10">

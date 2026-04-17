@@ -68,13 +68,7 @@ export function Sidebar() {
             </nav>
 
             <div className="mt-auto space-y-3 border-t border-black/5 pt-6">
-                <Link 
-                    href="/dashboard/collections"
-                    className="w-full h-12 xl:h-auto py-4 bg-[var(--base-color-pinterest-red)] text-white font-black rounded-[var(--comp-button-radius)] shadow-lg shadow-red-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                >
-                    <Plus size={24} strokeWidth={3} />
-                    <span className="hidden xl:block">Jelajahi Cerita</span>
-                </Link>
+
                 
                 <button 
                     onClick={handleSignOut}

@@ -29,7 +29,7 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug, isFeatur
     <div className="group animate-pin-enter">
       <Link href={`/story/${slug}`} className="block">
         {/* Visual Container */}
-        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-[var(--base-color-warm-light)] cursor-zoom-in border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700 ${isFeatured ? 'animate-float' : ''}`}>
+        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-[var(--base-color-warm-light)] cursor-zoom-in border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700`}>
           
           {/* Subtle Background Gradient (Fallback for slow loading) */}
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--base-color-sand-gray)] to-[var(--base-color-warm-light)]" />

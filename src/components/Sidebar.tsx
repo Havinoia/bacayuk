@@ -64,15 +64,7 @@ export function Sidebar() {
                     )
                 })}
 
-                <div className="pt-6 space-y-3 border-t border-black/5 mt-4">
-                   <p className="hidden xl:block text-[10px] font-black text-[var(--base-color-olive-gray)] uppercase tracking-widest pl-4 mb-2">Kategori</p>
-                   {["Fabel", "Legenda", "Dongeng"].map(cat => (
-                      <Link key={cat} href={`/dashboard/collections?cat=${cat.toLowerCase()}`} className="hidden xl:flex items-center gap-3 py-2 px-4 rounded-full text-sm font-bold text-[var(--base-color-plum-black)] hover:bg-[var(--base-color-sand-gray)] transition-all">
-                        <div className="w-2 h-2 rounded-full bg-[var(--base-color-pinterest-red)]" />
-                        {cat}
-                      </Link>
-                   ))}
-                </div>
+
             </nav>
 
             <div className="mt-auto space-y-3 border-t border-black/5 pt-6">

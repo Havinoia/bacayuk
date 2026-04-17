@@ -1,12 +1,25 @@
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
 import { BottomNav } from "@/components/BottomNav";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { db } from "@/db";
+import { heroes } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  const hero = session?.user ? await db.query.heroes.findFirst({
+    where: eq(heroes.userId, session.user.id)
+  }) : null;
+
   return (
     <div className="min-h-screen flex bg-white">
       {/* Navigation Sidebar (Desktop) */}
@@ -14,7 +27,7 @@ export default async function DashboardLayout({
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top App Bar */}
-        <TopBar />
+        <TopBar initialPoints={hero?.points || 0} />
 
         {/* Main Content Area */}
         <main className="flex-1 w-full pb-32 lg:pb-10">

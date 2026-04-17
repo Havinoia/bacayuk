@@ -6,13 +6,19 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function TopBar() {
+export function TopBar({ initialPoints = 0 }: { initialPoints?: number }) {
     const { data: session } = authClient.useSession();
     const router = useRouter();
     const pathname = usePathname();
     const [searchValue, setSearchValue] = useState("");
     const [showDropdown, setShowDropdown] = useState(false);
+    const [points, setPoints] = useState(initialPoints);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Sync points with initialPoints (helpful for refreshes)
+    useEffect(() => {
+        setPoints(initialPoints);
+    }, [initialPoints]);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,6 +65,11 @@ export function TopBar() {
 
             {/* Profile & Dropdown */}
             <div className="flex items-center gap-1 shrink-0 relative" ref={dropdownRef}>
+                <div className="hidden sm:flex items-center gap-2 bg-[var(--base-color-warm-wash)] px-4 py-2 rounded-full border border-black/5 mr-2">
+                    <span className="text-[10px] font-black text-[var(--base-color-olive-gray)] uppercase tracking-widest">Poin Kita</span>
+                    <span className="text-[16px] font-black text-[var(--base-color-pinterest-red)]">{points}</span>
+                </div>
+
                 <Link href="/dashboard/quests" className="btn-pin-circle relative border-none">
                     <Bell size={22} />
                 </Link>

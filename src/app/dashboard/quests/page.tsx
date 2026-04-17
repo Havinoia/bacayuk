@@ -6,6 +6,8 @@ import { headers } from "next/headers";
 import { Trophy, Star, Target, Clock, ChevronRight, Zap, Shield, Sword, Heart } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ensureDailyQuests } from "@/lib/questUtils";
+import { QuestCountdown } from "@/components/QuestCountdown";
 
 export default async function QuestsPage() {
   const session = await auth.api.getSession({
@@ -16,36 +18,12 @@ export default async function QuestsPage() {
     redirect("/auth/login");
   }
 
-  // Fetch all daily quests
-  const allDailyQuests = await db.query.quests.findMany({
-    where: eq(quests.isDaily, true)
-  });
+  // Fetch Daily Quests (Ensures reset logic is applied)
+  const userQuestsWithDetails = await ensureDailyQuests(session.user.id);
 
-  // Ensure user has userQuests entries for today
-  for (const quest of allDailyQuests) {
-    const existing = await db.query.userQuests.findFirst({
-      where: and(
-        eq(userQuests.userId, session.user.id),
-        eq(userQuests.questId, quest.id)
-      )
-    });
-
-    if (!existing) {
-      await db.insert(userQuests).values({
-        userId: session.user.id,
-        questId: quest.id,
-        currentValue: 0,
-        isCompleted: false,
-      });
-    }
-  }
-
-  // Fetch user quests with quest details
-  const userQuestsWithDetails = await db.query.userQuests.findMany({
-    where: eq(userQuests.userId, session.user.id),
-    with: {
-      quest: true
-    }
+  // Fetch Hero for stats display
+  const hero = await db.query.heroes.findFirst({
+      where: eq(heroes.userId, session.user.id)
   });
 
   return (
@@ -63,15 +41,24 @@ export default async function QuestsPage() {
                 <div className="inline-flex px-4 py-1.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black tracking-[0.2em] uppercase border border-slate-200">
                     Tantangan Harian
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black font-header tracking-tight text-[var(--base-color-plum-black)]">Misi Membaca</h1>
-                <p className="text-lg text-[var(--base-color-olive-gray)] font-bold max-w-md">
-                    Selesaikan tantangan membaca harian untuk melengkapi koleksi pencapaianmu!
-                </p>
+                <h1 className="text-5xl md:text-7xl font-black font-header tracking-tight text-[var(--base-color-plum-black)]">Misi Harian</h1>
+                <div className="flex flex-col gap-3">
+                    <p className="text-lg text-[var(--base-color-olive-gray)] font-bold max-w-md">
+                        Selesaikan tantangan membaca harian untuk melengkapi koleksi pencapaianmu!
+                    </p>
+                    <QuestCountdown />
+                </div>
             </div>
             <div className="flex gap-4">
                 <div className="bg-white px-6 py-4 rounded-3xl border border-black/5 shadow-xl text-center min-w-[140px]">
-                    <span className="text-[10px] font-black text-[var(--base-color-olive-gray)] uppercase block mb-1">Misi Selesai</span>
+                    <span className="text-[10px] font-black text-[var(--base-color-olive-gray)] uppercase block mb-1">Poin Aktivitas</span>
                     <span className="text-3xl font-black text-[var(--base-color-pinterest-red)]">
+                        {hero?.points || 0}
+                    </span>
+                </div>
+                <div className="bg-white px-6 py-4 rounded-3xl border border-black/5 shadow-xl text-center min-w-[140px]">
+                    <span className="text-[10px] font-black text-[var(--base-color-olive-gray)] uppercase block mb-1">Misi Selesai</span>
+                    <span className="text-3xl font-black text-emerald-500">
                         {userQuestsWithDetails.filter(uq => uq.isCompleted).length}
                     </span>
                 </div>
@@ -128,7 +115,7 @@ export default async function QuestsPage() {
                                 <div className="flex items-center justify-between pt-4">
                                     <div className="flex items-center gap-2">
                                         <Star size={18} className="text-amber-500 fill-amber-500" />
-                                        <span className="text-sm font-black text-amber-600">Terima Poin</span>
+                                        <span className="text-sm font-black text-amber-600">Terima {quest.pointsReward} Poin</span>
                                     </div>
                                     <Link 
                                         href={quest.type === 'READING' ? "/dashboard/collections" : "/dashboard"}

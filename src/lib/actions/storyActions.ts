@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { storyPins, storyPageFavorites } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { updateQuestProgress } from "../questUtils";
 
 /**
  * Updates the pinned page for a user in a story.
@@ -69,6 +70,9 @@ export async function togglePageFavorite(userId: string, storyId: number, pageNu
             storyId,
             pageNumber
         });
+
+        // Update Quest Progress
+        await updateQuestProgress(userId, "FAVORITE", 1);
     }
 
     revalidatePath(`/story/[slug]`, "page");

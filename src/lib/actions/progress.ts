@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { readingProgress } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { updateQuestProgress } from "../questUtils";
 
 export async function toggleStoryCompletion(userId: string, storyId: number) {
     if (!userId) throw new Error("User not authenticated");
@@ -30,6 +31,9 @@ export async function toggleStoryCompletion(userId: string, storyId: number) {
             userId,
             storyId
         });
+        
+        // Update Quest Progress
+        await updateQuestProgress(userId, "READING", 1);
     }
 
     // Revalidate paths to update UI

@@ -76,6 +76,7 @@ export const heroes = pgTable("heroes", {
   role: text("role").default("default"), // dwarf, peri, kesatria, penyihir, pemanah
   xp: integer("xp").default(0).notNull(),
   level: integer("level").default(1).notNull(),
+  points: integer("points").default(0).notNull(), // Activity Points
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -86,6 +87,7 @@ export const quests = pgTable("quests", {
   title: text("title").notNull(),
   description: text("description"),
   xpReward: integer("xp_reward").notNull(),
+  pointsReward: integer("points_reward").default(1).notNull(), // Reward points for activity
   type: text("type").notNull(), // READING, VOCABULARY, etc.
   targetValue: integer("target_value").notNull(),
   isDaily: boolean("is_daily").default(true).notNull(),
@@ -99,6 +101,7 @@ export const userQuests = pgTable("user_quests", {
   questId: integer("quest_id").notNull().references(() => quests.id),
   currentValue: integer("current_value").default(0).notNull(),
   isCompleted: boolean("is_completed").default(false).notNull(),
+  assignedAt: timestamp("assigned_at").defaultNow().notNull(), // To track daily reset
   lastUpdated: timestamp("last_updated").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
 });
@@ -110,29 +113,6 @@ export const readingProgress = pgTable("reading_progress", {
   storyId: integer("story_id").notNull().references(() => stories.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
-
-// Relations
-export const categoriesRelations = relations(categories, ({ many }) => ({
-  stories: many(stories),
-}));
-
-export const heroesRelations = relations(heroes, ({ one }) => ({
-  user: one(user, {
-    fields: [heroes.userId],
-    references: [user.id],
-  }),
-}));
-
-export const readingProgressRelations = relations(readingProgress, ({ one }) => ({
-  user: one(user, {
-    fields: [readingProgress.userId],
-    references: [user.id],
-  }),
-  story: one(stories, {
-    fields: [readingProgress.storyId],
-    references: [stories.id],
-  }),
-}));
 
 // Story Pages Table
 export const storyPages = pgTable("story_pages", {
@@ -162,10 +142,71 @@ export const storyPageFavorites = pgTable("story_page_favorites", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// New Relations
+
+// Relations
+export const userRelations = relations(user, ({ one, many }) => ({
+  hero: one(heroes, {
+    fields: [user.id],
+    references: [heroes.userId],
+  }),
+  sessions: many(session),
+  accounts: many(account),
+  userQuests: many(userQuests),
+  readingProgress: many(readingProgress),
+  storyPins: many(storyPins),
+  favorites: many(storyPageFavorites),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+	user: one(user, {
+		fields: [session.userId],
+		references: [user.id],
+	}),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+	user: one(user, {
+		fields: [account.userId],
+		references: [user.id],
+	}),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  stories: many(stories),
+}));
+
+export const storiesRelations = relations(stories, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [stories.categoryId],
+    references: [categories.id],
+  }),
+  pages: many(storyPages),
+  readingProgress: many(readingProgress),
+  pins: many(storyPins),
+  favorites: many(storyPageFavorites),
+}));
+
+export const heroesRelations = relations(heroes, ({ one }) => ({
+  user: one(user, {
+    fields: [heroes.userId],
+    references: [user.id],
+  }),
+}));
+
 export const storyPagesRelations = relations(storyPages, ({ one }) => ({
   story: one(stories, {
     fields: [storyPages.storyId],
+    references: [stories.id],
+  }),
+}));
+
+export const readingProgressRelations = relations(readingProgress, ({ one }) => ({
+  user: one(user, {
+    fields: [readingProgress.userId],
+    references: [user.id],
+  }),
+  story: one(stories, {
+    fields: [readingProgress.storyId],
     references: [stories.id],
   }),
 }));
@@ -192,14 +233,6 @@ export const storyPageFavoritesRelations = relations(storyPageFavorites, ({ one 
   }),
 }));
 
-export const storiesRelations = relations(stories, ({ one, many }) => ({
-  category: one(categories, {
-    fields: [stories.categoryId],
-    references: [categories.id],
-  }),
-  pages: many(storyPages),
-}));
-
 export const questsRelations = relations(quests, ({ many }) => ({
   userQuests: many(userQuests),
 }));
@@ -214,4 +247,5 @@ export const userQuestsRelations = relations(userQuests, ({ one }) => ({
     references: [quests.id],
   }),
 }));
+
 

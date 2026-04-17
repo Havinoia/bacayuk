@@ -168,8 +168,33 @@ async function main() {
 
     // 3. Insert Quests
     await db.insert(questsTable).values([
-        { title: "Pembaca Kilat", description: "Selesaikan 2 bab hari ini", xpReward: 50, type: "READING", targetValue: 2, isDaily: true },
-        { title: "Pakar Kata", description: "Pelajari 5 kosa kata baru", xpReward: 30, type: "VOCABULARY", targetValue: 5, isDaily: true }
+        { 
+            title: "Pembaca Pemula", 
+            description: "Selesaikan membaca 1 cerita", 
+            xpReward: 50, 
+            pointsReward: 1, 
+            type: "READING", 
+            targetValue: 1, 
+            isDaily: true 
+        },
+        { 
+            title: "Pecinta Cerita", 
+            description: "Berikan 2 hati (favorit) pada halaman cerita", 
+            xpReward: 30, 
+            pointsReward: 1, 
+            type: "FAVORITE", 
+            targetValue: 2, 
+            isDaily: true 
+        },
+        { 
+            title: "Petualang Sejati", 
+            description: "Selesaikan 1 petualangan penuh", 
+            xpReward: 100, 
+            pointsReward: 2, 
+            type: "READING", 
+            targetValue: 1, 
+            isDaily: true 
+        }
     ]);
 
     const categoryMap: Record<string, number> = {

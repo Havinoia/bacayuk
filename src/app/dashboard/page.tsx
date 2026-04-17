@@ -3,11 +3,13 @@ import { db } from "@/db";
 import { heroes, stories, readingProgress, userQuests } from "@/db/schema";
 import { eq, desc, count } from "drizzle-orm";
 import { headers } from "next/headers";
-import { Clock, Trophy, Target, ChevronRight, Plus } from "lucide-react";
+import { Clock, Trophy, Target, ChevronRight, Plus, Star } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { StoryPin } from "@/components/StoryPin";
+import { ensureDailyQuests } from "@/lib/questUtils";
+import { QuestCountdown } from "@/components/QuestCountdown";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -36,11 +38,12 @@ export default async function DashboardPage() {
     limit: 20
   });
 
-  // Fetch Daily Quests
-  const userActiveQuests = await db.query.userQuests.findMany({
-      where: eq(userQuests.userId, session.user.id),
-      with: { quest: true },
-      limit: 3
+  // Fetch Daily Quests (Ensure they are reset if it's a new day)
+  const userActiveQuests = await ensureDailyQuests(session.user.id);
+
+  // Fetch Hero Points for display
+  const hero = await db.query.heroes.findFirst({
+      where: eq(heroes.userId, session.user.id)
   });
 
   return (
@@ -106,37 +109,60 @@ export default async function DashboardPage() {
 
           {/* Right Column: Quests */}
           <div className="w-full lg:w-80 shrink-0 lg:sticky lg:top-24 h-fit space-y-10">
-              {/* Misi Harian */}
-              <section className="space-y-6">
-                  <h3 className="text-lg font-bold text-[var(--base-color-plum-black)] flex items-center gap-2">
-                       Misi Aktif <Trophy size={18} className="text-amber-500" />
-                  </h3>
+               {/* Misi Harian */}
+              <section className="space-y-6 bg-[var(--base-color-warm-wash)] p-6 rounded-[3rem] border border-black/5 shadow-inner">
+                  <div className="space-y-2">
+                       <h3 className="text-xl font-black text-[var(--base-color-plum-black)] flex items-center justify-between">
+                            Misi Harian <Trophy size={22} className="text-amber-500" />
+                       </h3>
+                       <QuestCountdown />
+                  </div>
+
+                  <div className="bg-white p-5 rounded-[2rem] border border-black/5 flex items-center justify-between shadow-sm">
+                      <div className="space-y-0.5">
+                          <p className="text-[10px] font-black text-[var(--base-color-olive-gray)] uppercase tracking-widest">Poin Aktivitas</p>
+                          <p className="text-2xl font-black text-[var(--base-color-pinterest-red)]">{hero?.points || 0}</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500 shadow-inner">
+                          <Star size={20} className="fill-amber-500" />
+                      </div>
+                  </div>
+
                   <div className="space-y-3">
                       {userActiveQuests.length === 0 && (
-                          <div className="p-8 text-center bg-[var(--base-color-sand-gray)] rounded-[20px]">
-                              <p className="text-sm font-bold text-[var(--base-color-olive-gray)]">Belum ada misi aktif</p>
+                          <div className="p-8 text-center bg-white/50 rounded-[20px] border border-dashed border-black/10">
+                              <p className="text-sm font-bold text-[var(--base-color-olive-gray)]">Belum ada misi hari ini</p>
                           </div>
                       )}
                       {userActiveQuests.map((uq) => {
                           if (!uq.quest) return null;
                           return (
                               <Link key={uq.id} href="/dashboard/quests">
-                                  <div className="bg-white p-4 rounded-[20px] flex items-center gap-4 border border-black/5 hover:bg-[var(--base-color-sand-gray)] transition-all group mb-3">
-                                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${uq.isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
-                                          {uq.quest.type === 'READING' ? <Clock size={20} /> : <Target size={20} />}
+                                  <div className={`p-5 rounded-[2rem] flex items-center gap-4 border transition-all group mb-3 relative overflow-hidden ${uq.isCompleted ? 'bg-emerald-50 border-emerald-100' : 'bg-white border-black/5 hover:border-[var(--base-color-pinterest-red)]/20 shadow-sm'}`}>
+                                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${uq.isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
+                                          {uq.quest.type === 'READING' ? <Clock size={24} /> : <Target size={24} />}
                                       </div>
                                       <div className="flex-1 overflow-hidden">
-                                          <h5 className="font-bold text-[13px] text-[var(--base-color-plum-black)] line-clamp-1">{uq.quest.title}</h5>
-                                          <p className="text-[10px] font-medium text-[var(--base-color-olive-gray)] uppercase">Berhadiah Poin</p>
+                                          <h5 className="font-black text-[14px] text-[var(--base-color-plum-black)] line-clamp-1 group-hover:text-[var(--base-color-pinterest-red)] transition-colors">{uq.quest.title}</h5>
+                                          <div className="flex items-center gap-1.5 mt-0.5">
+                                              <Star size={10} className="text-amber-500 fill-amber-500" />
+                                              <p className="text-[10px] font-black text-amber-600 uppercase tracking-tighter">+{uq.quest.pointsReward} POOIN</p>
+                                          </div>
                                       </div>
-                                      <ChevronRight size={16} className="text-[var(--base-color-olive-gray)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                      {uq.isCompleted ? (
+                                           <div className="bg-emerald-500 text-white p-1 rounded-full">
+                                               <ChevronRight size={14} />
+                                           </div>
+                                      ) : (
+                                          <ChevronRight size={16} className="text-[var(--base-color-olive-gray)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                      )}
                                   </div>
                               </Link>
                           );
                       })}
                   </div>
-                  <Link href="/dashboard/quests" className="block text-center text-[12px] font-bold text-[var(--base-color-pinterest-red)] hover:underline">
-                      Lihat Semua Misi →
+                  <Link href="/dashboard/quests" className="btn-pin-secondary w-full py-3 text-[12px] font-black uppercase tracking-widest text-center">
+                      Semua Misi →
                   </Link>
               </section>
           </div>

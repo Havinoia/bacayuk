@@ -54,13 +54,34 @@ export async function ensureDailyQuests(userId: string) {
 
     if (dailyPool.length === 0) return [];
 
-    // 4. Randomly pick 3 (or less if pool is small)
-    const shuffled = [...dailyPool].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 3);
+    // 4. Randomly pick exactly 3 quests with UNIQUE types
+    // Group pool by type to ensure variety
+    const groupedByType: Record<string, any[]> = {};
+    for (const q of dailyPool) {
+        if (!groupedByType[q.type]) groupedByType[q.type] = [];
+        groupedByType[q.type].push(q);
+    }
+
+    const availableTypes = Object.keys(groupedByType).sort(() => 0.5 - Math.random());
+    const selectedQuests = [];
+    const recentQuestIds = oldDailyQuests.map(uq => uq.questId);
+
+    // Pick 1 quest from each available type until we have 3
+    for (const type of availableTypes) {
+        if (selectedQuests.length >= 3) break;
+
+        const typePool = groupedByType[type];
+        // Try to pick a quest that wasn't assigned recently
+        const freshQuests = typePool.filter(q => !recentQuestIds.includes(q.id));
+        const finalPool = freshQuests.length > 0 ? freshQuests : typePool;
+        
+        const picked = finalPool[Math.floor(Math.random() * finalPool.length)];
+        selectedQuests.push(picked);
+    }
 
     // 5. Assign to user
     const newAssignments = [];
-    for (const q of selected) {
+    for (const q of selectedQuests) {
         const [assigned] = await db.insert(userQuests).values({
             userId,
             questId: q.id,

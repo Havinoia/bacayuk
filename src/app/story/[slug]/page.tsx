@@ -5,7 +5,7 @@ import { db } from "@/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { eq, and } from "drizzle-orm";
-import { stories, readingProgress, storyPages, storyPins, storyPageFavorites } from "@/db/schema";
+import { stories, readingProgress, storyPages, storyPins, storyPageFavorites, savedStories } from "@/db/schema";
 import { StoryReader } from "@/components/StoryReader";
 
 export default async function StoryPage({ params }: { params: { slug: string } }) {
@@ -31,6 +31,7 @@ export default async function StoryPage({ params }: { params: { slug: string } }
   let progress = null;
   let pin = null;
   let favorites: number[] = [];
+  let isSaved = false;
 
   if (isLoggedIn && story) {
       progress = await db.query.readingProgress.findFirst({
@@ -54,6 +55,14 @@ export default async function StoryPage({ params }: { params: { slug: string } }
           )
       });
       favorites = favResults.map(f => f.pageNumber);
+
+      const savedEntry = await db.query.savedStories.findFirst({
+          where: and(
+              eq(savedStories.userId, session.user.id),
+              eq(savedStories.storyId, story.id)
+          )
+      });
+      isSaved = !!savedEntry;
   }
 
   if (!story) {
@@ -73,7 +82,7 @@ export default async function StoryPage({ params }: { params: { slug: string } }
       
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Navigation */}
-        <Link href="/dashboard" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/80 backdrop-blur-sm border border-black/5 text-sm font-black text-foreground/60 hover:text-primary mb-12 transition-all hover:shadow-lg hover:-translate-y-0.5 group">
+        <Link href="/dashboard/collections" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/80 backdrop-blur-sm border border-black/5 text-sm font-black text-foreground/60 hover:text-primary mb-12 transition-all hover:shadow-lg hover:-translate-y-0.5 group">
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> Kembali Jelajah
         </Link>
 
@@ -110,6 +119,7 @@ export default async function StoryPage({ params }: { params: { slug: string } }
                       pages={displayPages}
                       initialPage={pin?.pageNumber || 1}
                       initialFavorites={favorites}
+                      isSavedInitial={isSaved}
                       isCompleted={!!progress}
                   />
               ) : (

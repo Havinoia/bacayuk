@@ -142,6 +142,14 @@ export const storyPageFavorites = pgTable("story_page_favorites", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Saved Stories Table (Bookmarks)
+export const savedStories = pgTable("saved_stories", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id),
+  storyId: integer("story_id").notNull().references(() => stories.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Notifications Table
 export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey(),
@@ -169,6 +177,7 @@ export const userRelations = relations(user, ({ one, many }) => ({
   storyPins: many(storyPins),
   favorites: many(storyPageFavorites),
   notifications: many(notifications),
+  savedStories: many(savedStories),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -198,6 +207,7 @@ export const storiesRelations = relations(stories, ({ one, many }) => ({
   readingProgress: many(readingProgress),
   pins: many(storyPins),
   favorites: many(storyPageFavorites),
+  savedStories: many(savedStories),
 }));
 
 export const heroesRelations = relations(heroes, ({ one }) => ({
@@ -266,6 +276,17 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
   user: one(user, {
     fields: [notifications.userId],
     references: [user.id],
+  }),
+}));
+
+export const savedStoriesRelations = relations(savedStories, ({ one }) => ({
+  user: one(user, {
+    fields: [savedStories.userId],
+    references: [user.id],
+  }),
+  story: one(stories, {
+    fields: [savedStories.storyId],
+    references: [stories.id],
   }),
 }));
 

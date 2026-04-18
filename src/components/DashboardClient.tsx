@@ -14,6 +14,7 @@ interface DashboardClientProps {
     allStories: any[];
     userActiveQuests: any[];
     heroPoints: number;
+    bookmarkIds?: number[];
 }
 
 export function DashboardClient({ 
@@ -22,7 +23,8 @@ export function DashboardClient({
     totalStories, 
     allStories, 
     userActiveQuests,
-    heroPoints
+    heroPoints,
+    bookmarkIds = []
 }: DashboardClientProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isFullyRevealed, setIsFullyRevealed] = useState(false);
@@ -126,6 +128,7 @@ export function DashboardClient({
                                         author={undefined}
                                         category={story.category || { name: "Cerita" }}
                                         isFeatured={true}
+                                        isSavedInitial={bookmarkIds.includes(story.id)}
                                     />
                                 </div>
                             ))}

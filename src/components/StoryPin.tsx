@@ -3,6 +3,8 @@
 import React from "react";
 import { Bookmark, Heart, MoreHorizontal, BookOpen } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { toggleBookmark } from "@/lib/actions/bookmarkActions";
 
 interface StoryPinProps {
   id: number | string;
@@ -12,21 +14,33 @@ interface StoryPinProps {
   category: { name: string } | string;
   slug: string;
   isFeatured?: boolean;
+  isSavedInitial?: boolean;
 }
 
-export const StoryPin = ({ title, author, category, slug, thumbnailUrl, isFeatured = false }: StoryPinProps) => {
+export const StoryPin = ({ id, title, author, category, slug, thumbnailUrl, isFeatured = false, isSavedInitial = false }: StoryPinProps) => {
+  const [isSaved, setIsSaved] = useState(isSavedInitial);
   const categoryName = typeof category === 'string' ? category : category.name;
   
-  const handleActionClick = (e: React.MouseEvent) => {
+  const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const nextState = !isSaved;
+    setIsSaved(nextState);
+    
+    try {
+      await toggleBookmark(Number(id));
+    } catch (err) {
+      setIsSaved(!nextState);
+      alert(err instanceof Error ? err.message : "Gagal menyimpan cerita");
+    }
   };
 
   return (
     <div className="group animate-pin-enter">
       <Link href={`/story/${slug}`} className="block">
         {/* Visual Container */}
-        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-white cursor-zoom-in border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700 flex flex-col`}>
+        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-white cursor-pointer border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700 flex flex-col`}>
           
           {/* Background Image/Fallback */}
           {thumbnailUrl ? (
@@ -54,9 +68,16 @@ export const StoryPin = ({ title, author, category, slug, thumbnailUrl, isFeatur
               <div className="bg-white/20 backdrop-blur-xl border border-white/30 px-4 py-1.5 rounded-full text-[10px] font-black text-white shadow-sm uppercase tracking-widest">
                 {categoryName}
               </div>
-              <div className="bg-[var(--base-color-pinterest-red)] text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
-                <Bookmark size={16} fill="white" />
-              </div>
+              <button 
+                onClick={handleSave}
+                className={`p-2 rounded-full shadow-lg transition-all scale-75 cursor-pointer group-hover:scale-100 ${
+                  isSaved 
+                    ? 'bg-white text-[var(--base-color-pinterest-red)] opacity-100 scale-100' 
+                    : 'bg-[var(--base-color-pinterest-red)] text-white opacity-0 group-hover:opacity-100'
+                }`}
+              >
+                <Bookmark size={16} fill={isSaved ? "currentColor" : "none"} />
+              </button>
             </div>
 
             {/* Middle: Spacer for visual balance */}

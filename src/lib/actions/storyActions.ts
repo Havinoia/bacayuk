@@ -38,6 +38,9 @@ export async function togglePagePin(userId: string, storyId: number, pageNumber:
             storyId,
             pageNumber
         });
+
+        // Update Quest Progress
+        await updateQuestProgress(userId, "PIN", 1);
     }
 
     revalidatePath(`/story/[slug]`, "page");

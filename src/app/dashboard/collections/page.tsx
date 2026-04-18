@@ -1,22 +1,34 @@
 import Link from "next/link";
 import { db } from "@/db";
 import { stories, categories } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { SearchInput } from "@/components/SearchInput";
 import { Suspense } from "react";
 import { and, ilike } from "drizzle-orm";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Bookmark } from "lucide-react";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { StoryPin } from "@/components/StoryPin";
+import { savedStories } from "@/db/schema";
+import { getUserBookmarks } from "@/lib/actions/bookmarkActions";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { inArray } from "drizzle-orm";
 
 export default async function CollectionsPage({
   searchParams,
 }: {
-  searchParams: { cat?: string; q?: string };
+  searchParams: { cat?: string; q?: string; saved?: string };
 }) {
   const params = await searchParams;
   const selectedCatId = params.cat ? parseInt(params.cat) : null;
   const searchQuery = params.q || "";
+  const isSavedOnly = params.saved === "true";
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  const userBookmarkIds = session?.user ? await getUserBookmarks() : [];
 
   // Fetch categories for filtering
   const allCategories = await db.select().from(categories);
@@ -24,7 +36,8 @@ export default async function CollectionsPage({
   // Build where clause
   const whereClause = and(
     selectedCatId ? eq(stories.categoryId, selectedCatId) : undefined,
-    searchQuery ? ilike(stories.title, `%${searchQuery}%`) : undefined
+    searchQuery ? ilike(stories.title, `%${searchQuery}%`) : undefined,
+    isSavedOnly ? (userBookmarkIds.length > 0 ? inArray(stories.id, userBookmarkIds) : sql`1=0`) : undefined
   );
 
   // Fetch stories based on filter and search
@@ -65,7 +78,7 @@ export default async function CollectionsPage({
           <Link 
             href="/dashboard/collections"
             className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 ${
-              !selectedCatId 
+              (!selectedCatId && !isSavedOnly) 
                 ? "bg-primary text-white shadow-primary/30" 
                 : "bg-white text-foreground/40 hover:text-primary hover:bg-primary/5"
             }`}
@@ -77,7 +90,7 @@ export default async function CollectionsPage({
               key={cat.id}
               href={`/dashboard/collections?cat=${cat.id}`}
               className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 ${
-                selectedCatId === cat.id 
+                (selectedCatId === cat.id && !isSavedOnly) 
                   ? "bg-primary text-white shadow-primary/30" 
                   : "bg-white text-foreground/40 hover:text-primary hover:bg-primary/5"
               }`}
@@ -85,6 +98,21 @@ export default async function CollectionsPage({
               {cat.name}
             </Link>
           ))}
+
+          {/* Saved Stories Filter */}
+          {session?.user && (
+            <Link 
+              href={isSavedOnly ? "/dashboard/collections" : "/dashboard/collections?saved=true"}
+              className={`px-8 py-3 rounded-full text-sm font-black transition-all shadow-lg active:scale-95 flex items-center gap-2 ${
+                isSavedOnly 
+                  ? "bg-[var(--base-color-pinterest-red)] text-white shadow-[var(--base-color-pinterest-red)]/30" 
+                  : "bg-white text-foreground/40 hover:text-[var(--base-color-pinterest-red)] hover:bg-[var(--base-color-pinterest-red)]/5"
+              }`}
+            >
+              <Bookmark size={16} fill={isSavedOnly ? "currentColor" : "none"} />
+              Cerita Tersimpan
+            </Link>
+          )}
         </div>
       </header>
 
@@ -100,6 +128,7 @@ export default async function CollectionsPage({
               slug={story.slug}
               thumbnailUrl={story.thumbnailUrl || ""}
               category={story.category || { name: "Cerita" }}
+              isSavedInitial={userBookmarkIds.includes(story.id)}
             />
           ))}
         </MasonryGrid>

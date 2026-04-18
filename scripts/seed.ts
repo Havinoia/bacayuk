@@ -163,7 +163,7 @@ async function main() {
         },
         { 
             title: "Pecinta Cerita", 
-            description: "Berikan 2 hati (favorit) pada halaman cerita", 
+            description: "Berikan 2 hati pada halaman cerita", 
             xpReward: 30, 
             pointsReward: 1, 
             type: "FAVORITE", 
@@ -171,12 +171,39 @@ async function main() {
             isDaily: true 
         },
         { 
-            title: "Petualang Sejati", 
-            description: "Selesaikan 1 petualangan penuh", 
+            title: "Penjelajah Ulung", 
+            description: "Selesaikan membaca 2 cerita hari ini", 
             xpReward: 100, 
             pointsReward: 2, 
             type: "READING", 
+            targetValue: 2, 
+            isDaily: true 
+        },
+        { 
+            title: "Kolektor Momen", 
+            description: "Berikan 5 hati pada halaman favoritmu", 
+            xpReward: 60, 
+            pointsReward: 2, 
+            type: "FAVORITE", 
+            targetValue: 5, 
+            isDaily: true 
+        },
+        { 
+            title: "Penanda Jejak", 
+            description: "Simpan posisi membaca di 1 cerita", 
+            xpReward: 40, 
+            pointsReward: 1, 
+            type: "PIN", 
             targetValue: 1, 
+            isDaily: true 
+        },
+        { 
+            title: "Pustakawan Cilik", 
+            description: "Berikan 3 hati pada cerita yang berbeda", 
+            xpReward: 45, 
+            pointsReward: 1, 
+            type: "FAVORITE", 
+            targetValue: 3, 
             isDaily: true 
         }
     ]);

@@ -11,7 +11,8 @@ import {
     CheckCircle2,
     BookOpen 
 } from "lucide-react";
-import { togglePagePin, togglePageFavorite } from "@/lib/actions/storyActions";
+import { togglePagePin } from "@/lib/actions/storyActions";
+import { toggleBookmark } from "@/lib/actions/bookmarkActions";
 import { MarkAsFinished } from "./MarkAsFinished";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +28,7 @@ interface StoryReaderProps {
     pages: Page[];
     initialPage: number;
     initialFavorites: number[];
+    isSavedInitial: boolean;
     isCompleted: boolean;
 }
 
@@ -36,6 +38,7 @@ export function StoryReader({
     pages, 
     initialPage, 
     initialFavorites,
+    isSavedInitial,
     isCompleted
 }: StoryReaderProps) {
     const router = useRouter();
@@ -43,8 +46,9 @@ export function StoryReader({
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pinnedPage, setPinnedPage] = useState<number | null>(initialPage);
     const [favorites, setFavorites] = useState<number[]>(initialFavorites);
+    const [isSaved, setIsSaved] = useState(isSavedInitial);
     const [loadingPin, setLoadingPin] = useState(false);
-    const [loadingFav, setLoadingFav] = useState(false);
+    const [loadingSave, setLoadingSave] = useState(false);
 
     const currentPageData = pages.find(p => p.pageNumber === currentPage) || pages[0];
     const isFirstPage = currentPage === 1;
@@ -67,21 +71,18 @@ export function StoryReader({
         }
     };
 
-    const handleFavorite = async () => {
-        if (loadingFav) return;
-        setLoadingFav(true);
+    const handleSave = async () => {
+        if (loadingSave) return;
+        setLoadingSave(true);
         try {
-            await togglePageFavorite(userId, storyId, currentPage);
-            if (isFavorited) {
-                setFavorites(favorites.filter(p => p !== currentPage));
-            } else {
-                setFavorites([...favorites, currentPage]);
-            }
+            await toggleBookmark(storyId);
+            setIsSaved(!isSaved);
             router.refresh();
         } catch (error) {
-            console.error("Failed to favorite page:", error);
+            console.error("Failed to save story:", error);
+            alert(error instanceof Error ? error.message : "Gagal menyimpan cerita");
         } finally {
-            setLoadingFav(false);
+            setLoadingSave(false);
         }
     };
 
@@ -126,16 +127,16 @@ export function StoryReader({
                     </button>
 
                     <button 
-                        onClick={handleFavorite}
-                        disabled={loadingFav}
+                        onClick={handleSave}
+                        disabled={loadingSave}
                         className={`p-3 rounded-2xl transition-all duration-300 flex items-center gap-2 font-black text-xs uppercase tracking-widest ${
-                            isFavorited 
+                            isSaved 
                                 ? "bg-rose-100 text-rose-600 shadow-inner" 
                                 : "bg-white text-slate-400 hover:text-rose-500 hover:bg-rose-50"
                         }`}
                     >
-                        {loadingFav ? <Loader2 size={18} className="animate-spin" /> : <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />}
-                        {isFavorited ? "Favorit" : "Sukai"}
+                        {loadingSave ? <Loader2 size={18} className="animate-spin" /> : <Heart size={18} fill={isSaved ? "currentColor" : "none"} />}
+                        {isSaved ? "Tersimpan" : "Simpan"}
                     </button>
                 </div>
 

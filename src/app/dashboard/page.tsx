@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { StoryPin } from "@/components/StoryPin";
 import { ensureDailyQuests } from "@/lib/questUtils";
+import { getUserBookmarks } from "@/lib/actions/bookmarkActions";
 import { QuestCountdown } from "@/components/QuestCountdown";
 
 import { DashboardClient } from "@/components/DashboardClient";
@@ -43,6 +44,9 @@ export default async function DashboardPage() {
   // Fetch Daily Quests (Ensure they are reset if it's a new day)
   const userActiveQuests = await ensureDailyQuests(session.user.id);
 
+  // Fetch bookmarks
+  const bookmarkIds = await getUserBookmarks();
+
   // Fetch Hero Details (For points display)
   const hero = await db.query.heroes.findFirst({
       where: eq(heroes.userId, session.user.id)
@@ -56,6 +60,7 @@ export default async function DashboardPage() {
       allStories={allStories}
       userActiveQuests={userActiveQuests}
       heroPoints={hero?.points || 0}
+      bookmarkIds={bookmarkIds}
     />
   );
 }

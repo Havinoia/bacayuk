@@ -63,7 +63,7 @@ export default async function StoryPage({ params }: { params: { slug: string } }
   // Fallback for stories that haven't been split into pages yet
   const displayPages = story.pages.length > 0 
     ? story.pages 
-    : [{ pageNumber: 1, content: story.content, imageUrl: story.thumbnailUrl }];
+    : [{ pageNumber: 1, content: story.content }];
 
   return (
     <div className="min-h-screen bg-[#fffef0] py-10 px-4 md:px-8 relative overflow-hidden">
@@ -101,33 +101,8 @@ export default async function StoryPage({ params }: { params: { slug: string } }
 
           {/* Story Container */}
           <div className="relative">
-            {!isLoggedIn && (
-                /* The "Green Frame" for Guest Preview */
-                <div className="w-full aspect-[16/10] md:aspect-[21/9] rounded-[3rem] border-[12px] md:border-[20px] border-emerald-400 bg-emerald-50 shadow-2xl relative overflow-hidden group mb-10">
-                    <div className="absolute inset-0 flex items-center justify-center p-4">
-                        {story.thumbnailUrl ? (
-                            <img 
-                                src={story.thumbnailUrl} 
-                                alt={story.title}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <BookOpen size={120} className="text-emerald-200/50 group-hover:scale-110 transition-transform duration-700" strokeWidth={1} />
-                        )}
-                    </div>
-                    {/* Cute Corner Decorations */}
-                    <div className="absolute top-4 left-4 w-8 h-8 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform -rotate-12">🦋</div>
-                    <div className="absolute bottom-4 right-4 w-8 h-8 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform rotate-12">🥕</div>
-                    
-                    <div className="absolute bottom-0 inset-x-0 h-1/2 bg-gradient-to-t from-emerald-900/40 to-transparent" />
-                    <div className="absolute bottom-6 left-10 text-white font-black text-lg md:text-2xl drop-shadow-md">
-                        Intip Petualangannya...
-                    </div>
-                </div>
-            )}
-
             {/* Content "Paper" */}
-            <div className={`${isLoggedIn ? '' : 'mt-[-40px]'} relative z-20 mx-4 md:mx-12 p-8 md:p-16 rounded-[3rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100`}>
+            <div className="relative z-20 mx-4 md:mx-12 p-8 md:p-16 rounded-[3rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100">
               {isLoggedIn ? (
                   <StoryReader 
                       storyId={story.id}

@@ -28,7 +28,7 @@
 
 .dashboard-main-content {
     position: sticky;
-    top: 0;
+    top: 80px; /* Offset to sit below the sticky TopBar */
     z-index: 40; /* Sits UNDER the curtain */
     width: 100%;
     min-height: 100vh;

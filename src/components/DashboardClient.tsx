@@ -101,7 +101,7 @@ export function DashboardClient({
 
             {/* 2. THE CONTENT (Revealed in the same place as the curtain) */}
             <div className="dashboard-main-content">
-                <div className="px-4 md:px-10 py-16 max-w-[2000px] mx-auto flex flex-col lg:flex-row gap-12">
+                <div className="px-4 md:px-10 pt-32 pb-16 max-w-[2000px] mx-auto flex flex-col lg:flex-row gap-12">
                     
                     {/* Left Column: Popular Stories */}
                     <div className="flex-1 space-y-12">

@@ -144,32 +144,7 @@ export function StoryReader({
                 </div>
             </div>
 
-            {/* 1. THE DYNAMIC IMAGE FRAME (Pinned at top of content) */}
-            <div className="relative">
-                <div className="w-full aspect-[16/10] md:aspect-[21/9] rounded-[3rem] border-[12px] md:border-[20px] border-emerald-400 bg-emerald-50 shadow-2xl relative overflow-hidden group">
-                    <div className="absolute inset-0 flex items-center justify-center p-4">
-                        {currentPageData.imageUrl ? (
-                            <img 
-                                key={currentPageData.imageUrl}
-                                src={currentPageData.imageUrl} 
-                                alt={`Halaman ${currentPage}`}
-                                className="w-full h-full object-cover transition-all duration-1000 animate-in fade-in zoom-in-95"
-                            />
-                        ) : (
-                            <BookOpen size={120} className="text-emerald-200/50 group-hover:scale-110 transition-transform duration-700" strokeWidth={1} />
-                        )}
-                    </div>
-                    
-                    {/* Decorative Corner Decorations */}
-                    <div className="absolute top-4 left-4 w-8 h-8 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform -rotate-12 z-20">🦋</div>
-                    <div className="absolute bottom-4 right-4 w-8 h-8 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform rotate-12 z-20">🥕</div>
-                    
-                    <div className="absolute bottom-0 inset-x-0 h-1/2 bg-gradient-to-t from-emerald-900/40 to-transparent z-10" />
-                    <div className="absolute bottom-6 left-10 text-white font-black text-lg md:text-2xl drop-shadow-md z-20">
-                        {currentPage === 1 ? "Petualangan Dimulai..." : `Bagian ${currentPage}`}
-                    </div>
-                </div>
-            </div>
+            <div className="pt-4" /> {/* Spacer after action bar */}
 
             {/* Content Display */}
             <div className="relative group min-h-[400px]">

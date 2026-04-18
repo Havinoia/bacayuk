@@ -14,12 +14,9 @@ interface StoryPinProps {
   isFeatured?: boolean;
 }
 
-export const StoryPin = ({ title, thumbnailUrl, author, category, slug, isFeatured = false }: StoryPinProps) => {
+export const StoryPin = ({ title, author, category, slug, thumbnailUrl, isFeatured = false }: StoryPinProps) => {
   const categoryName = typeof category === 'string' ? category : category.name;
   
-  // Custom fallback image path (served from public folder)
-  const fallbackImage = "/assets/images/story-placeholder.png";
-
   const handleActionClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -29,68 +26,61 @@ export const StoryPin = ({ title, thumbnailUrl, author, category, slug, isFeatur
     <div className="group animate-pin-enter">
       <Link href={`/story/${slug}`} className="block">
         {/* Visual Container */}
-        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-[var(--base-color-warm-light)] cursor-zoom-in border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700`}>
+        <div className={`relative ${isFeatured ? 'aspect-[4/5]' : 'aspect-[4/5]'} overflow-hidden rounded-[2.5rem] bg-white cursor-zoom-in border-4 border-white shadow-lg group-hover:shadow-[0_45px_70px_rgba(0,0,0,0.18)] transition-all duration-700 flex flex-col`}>
           
-          {/* Subtle Background Gradient (Fallback for slow loading) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[var(--base-color-sand-gray)] to-[var(--base-color-warm-light)]" />
+          {/* Background Image/Fallback */}
+          {thumbnailUrl ? (
+            <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-110">
+              <img 
+                src={thumbnailUrl} 
+                alt={title} 
+                className="w-full h-full object-cover"
+              />
+              {/* Premium Overlays */}
+              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+            </div>
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--base-color-warm-wash)] to-[var(--base-color-sand-gray)] opacity-50" />
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+            </>
+          )}
 
-          {/* The Image (Main Content) */}
-          <img 
-            src={thumbnailUrl || fallbackImage} 
-            alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover relative z-10 transition-transform duration-1000 group-hover:scale-105"
-          />
-
-          {/* High-Contrast Interactive Overlay */}
-          <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-3 z-20">
-            
-            {/* Top Row: Categorization & Quick Save */}
-            <div className="flex justify-between items-center w-full">
-               <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-black text-[var(--base-color-plum-black)] shadow-sm uppercase tracking-tight">
-                  {categoryName}
-               </div>
-               <button 
-                onClick={handleActionClick}
-                className="bg-[var(--base-color-pinterest-red)] text-white px-3.5 py-2 rounded-full text-[13px] font-black hover:scale-105 active:scale-95 shadow-[0_4px_12px_rgba(230,0,35,0.3)] transition-all pointer-events-auto"
-               >
-                  Simpan
-               </button>
+          {/* Content Layer */}
+          <div className="relative z-20 flex-1 p-8 flex flex-col justify-between">
+            {/* Top: Category */}
+            <div className="flex justify-between items-start">
+              <div className="bg-white/20 backdrop-blur-xl border border-white/30 px-4 py-1.5 rounded-full text-[10px] font-black text-white shadow-sm uppercase tracking-widest">
+                {categoryName}
+              </div>
+              <div className="bg-[var(--base-color-pinterest-red)] text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
+                <Bookmark size={16} fill="white" />
+              </div>
             </div>
 
-            {/* Bottom Row: Contextual Actions */}
-            <div className="flex justify-between items-end">
-               <div className="flex gap-2">
-                  <button 
-                    onClick={handleActionClick}
-                    className="w-8 h-8 bg-white/95 backdrop-blur-md rounded-full flex items-center justify-center text-[var(--base-color-plum-black)] hover:bg-white transition-all shadow-md active:scale-90 pointer-events-auto"
-                  >
-                    <MoreHorizontal size={16} strokeWidth={2.5} />
-                  </button>
-               </div>
+            {/* Middle: Spacer for visual balance */}
+            <div className="flex-1" />
+
+            {/* Bottom: Title (White text for contrast on image) */}
+            <div className="space-y-4 text-center">
+               <h3 className={`${isFeatured ? 'text-[28px]' : 'text-[22px]'} font-black leading-[1.1] ${thumbnailUrl ? 'text-white' : 'text-[var(--base-color-plum-black)]'} line-clamp-3 tracking-tighter group-hover:text-[var(--base-color-pinterest-red)] transition-colors uppercase italic font-header`}>
+                  {title}
+               </h3>
                
-               <div className="bg-white text-[var(--base-color-plum-black)] p-2 rounded-full hover:bg-[var(--base-color-sand-gray)] transition-all shadow-md active:scale-90 pointer-events-auto">
-                  <BookOpen size={16} />
+               <div className={`flex items-center justify-center gap-2 pt-2 border-t ${thumbnailUrl ? 'border-white/10' : 'border-black/5'} mx-4`}>
+                  <div className={`w-6 h-6 rounded-full ${thumbnailUrl ? 'bg-white text-[var(--base-color-plum-black)]' : 'bg-[var(--base-color-plum-black)] text-white'} flex items-center justify-center text-[10px] font-black uppercase`}>
+                      {author?.charAt(0) || "B"}
+                  </div>
+                  <span className={`text-[12px] ${thumbnailUrl ? 'text-white/60' : 'text-[var(--base-color-olive-gray)]'} font-bold tracking-tight uppercase`}>
+                    {author || "Bacayuk"}
+                  </span>
                </div>
             </div>
           </div>
-        </div>
 
-        {/* Typography & Metadata (Compact Hierarchy) */}
-        <div className="mt-5 px-1 space-y-2">
-          <div className="min-h-[44px] flex flex-col justify-start">
-            <h3 className={`${isFeatured ? 'text-[24px]' : 'text-[13px]'} font-black leading-[1.05] text-[var(--base-color-plum-black)] line-clamp-2 tracking-tighter group-hover:text-[var(--base-color-pinterest-red)] transition-colors uppercase`}>
-              {title}
-            </h3>
-          </div>
-          <div className="flex items-center gap-2 pt-0.5">
-            <div className="w-5 h-5 rounded-full bg-[var(--base-color-sand-gray)] flex items-center justify-center text-[8px] font-black text-[var(--base-color-plum-black)] uppercase border border-black/5">
-                {author?.charAt(0) || "B"}
-            </div>
-            <span className="text-[11px] text-[var(--base-color-olive-gray)] font-semibold tracking-tight">
-              {author || "Bacayuk"}
-            </span>
-          </div>
+          {/* Interaction Trigger Box */}
+          <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30 pointer-events-none" />
         </div>
       </Link>
     </div>

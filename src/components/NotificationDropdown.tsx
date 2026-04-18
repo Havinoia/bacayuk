@@ -18,13 +18,16 @@ interface Notification {
 
 export function NotificationDropdown({ 
     initialNotifications = [],
-    userId
+    userId,
+    isOpen,
+    onToggle
 }: { 
     initialNotifications: any[],
-    userId: string
+    userId: string,
+    isOpen: boolean,
+    onToggle: () => void
 }) {
     const [notifications, setNotifications] = useState(initialNotifications);
-    const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -33,13 +36,13 @@ export function NotificationDropdown({
     // Close dropdown on click outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setShowDropdown(false);
+            if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                onToggle();
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    }, [isOpen, onToggle]);
 
     const handleMarkAsRead = async (id: number) => {
         // Optimistic Update
@@ -69,7 +72,7 @@ export function NotificationDropdown({
     return (
         <div className="relative" ref={dropdownRef}>
             <button 
-                onClick={() => setShowDropdown(!showDropdown)}
+                onClick={onToggle}
                 className="btn-pin-circle cursor-pointer relative border-none"
             >
                 <Bell size={22} className={unreadCount > 0 ? "animate-swing" : ""} />
@@ -78,8 +81,8 @@ export function NotificationDropdown({
                 )}
             </button>
 
-            {showDropdown && (
-                <div className="absolute top-14 right-[-50px] sm:right-0 w-80 sm:w-96 bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.15)] border border-black/5 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
+            {isOpen && (
+                <div className="absolute top-14 right-[-50px] sm:right-0 w-80 sm:w-96 bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.15)] border border-black/5 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-[100]">
                     {/* Header */}
                     <div className="px-6 py-5 border-b border-black/5 flex items-center justify-between bg-slate-50/50">
                         <h3 className="font-black text-lg text-[var(--base-color-plum-black)]">Notifikasi</h3>
@@ -134,7 +137,7 @@ export function NotificationDropdown({
                                                             href={n.link}
                                                             onClick={() => {
                                                                 handleMarkAsRead(n.id);
-                                                                setShowDropdown(false);
+                                                                onToggle(); // Use onToggle to close
                                                             }}
                                                             className="text-[11px] font-black text-[var(--base-color-pinterest-red)] flex items-center gap-1 hover:underline"
                                                         >

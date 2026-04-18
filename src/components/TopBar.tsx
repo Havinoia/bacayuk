@@ -20,7 +20,7 @@ export function TopBar({
     const router = useRouter();
     const pathname = usePathname();
     const [searchValue, setSearchValue] = useState("");
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [activeMenu, setActiveMenu] = useState<'profile' | 'notifications' | null>(null);
     const [points, setPoints] = useState(initialPoints);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -44,20 +44,24 @@ export function TopBar({
     // Close dropdown on click outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setShowDropdown(false);
+            if (activeMenu && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setActiveMenu(null);
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    }, [activeMenu]);
+
+    const toggleMenu = (menu: 'profile' | 'notifications') => {
+        setActiveMenu(prev => prev === menu ? null : menu);
+    };
 
     const isHome = pathname === "/dashboard";
     const isCollections = pathname.startsWith("/dashboard/collections");
     const isQuests = pathname.startsWith("/dashboard/quests");
 
     return (
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md px-6 py-4 flex items-center gap-4 w-full border-b border-black/5">
+        <header className="sticky top-0 z-70 bg-white/95 backdrop-blur-md px-6 py-4 flex items-center gap-4 w-full border-b border-black/5">
 
             
             {/* Search Bar */}
@@ -82,10 +86,12 @@ export function TopBar({
                 <NotificationDropdown 
                     initialNotifications={initialNotifications} 
                     userId={userId} 
+                    isOpen={activeMenu === 'notifications'}
+                    onToggle={() => toggleMenu('notifications')}
                 />
                 
                 <button 
-                    onClick={() => setShowDropdown(!showDropdown)}
+                    onClick={() => toggleMenu('profile')}
                     className="btn-pin-circle cursor-pointer border-none overflow-hidden p-0 ml-1 active:scale-95 transition-transform"
                 >
                     {session?.user?.image ? (
@@ -98,8 +104,8 @@ export function TopBar({
                 </button>
 
                 {/* Pinterest Style Dropdown Menu */}
-                {showDropdown && (
-                    <div className="absolute top-14 right-0 w-72 bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-black/5 p-4 animate-in fade-in zoom-in-95 duration-200">
+                {activeMenu === 'profile' && (
+                    <div className="absolute top-14 right-0 w-72 bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-black/5 p-4 animate-in fade-in zoom-in-95 duration-200 z-[100]">
                         <div className="px-4 py-3 mb-2">
                             <p className="text-[14px] font-medium text-[var(--base-color-olive-gray)]">Akun Anda</p>
                             <div className="flex items-center gap-3 mt-3 p-2 rounded-2xl bg-[var(--base-color-warm-light)]/30 border border-black/5">

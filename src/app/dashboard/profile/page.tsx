@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { User, Shield, Trophy, BookOpen, Star, Calendar } from "lucide-react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { ProfileEditButton } from "@/components/ProfileEditButton";
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({
@@ -67,7 +68,14 @@ export default async function ProfilePage() {
              </p>
 
              <div className="flex gap-4 justify-center md:justify-start pt-2">
-                <button className="btn-pin-primary px-6 py-2.5">Edit Profil</button>
+                <ProfileEditButton 
+                    user={{
+                        id: session.user.id,
+                        name: session.user.name,
+                        image: session.user.image
+                    }}
+                    hero={hero ? { role: hero.role } : null}
+                />
                 <button className="btn-pin-secondary px-6 py-2.5">Bagikan</button>
              </div>
           </div>

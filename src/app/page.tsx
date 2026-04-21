@@ -56,7 +56,7 @@ export default async function Home() {
           </h1>
           
           <p className="max-w-2xl mx-auto text-xl md:text-2xl font-medium text-[var(--base-color-olive-gray)] leading-relaxed">
-            Pilih pahlawan favoritmu, jelajahi ribuan kisah dongeng nusantara, dan temukan pesan moral yang berharga setiap harinya.
+            Jelajahi ribuan kisah dongeng nusantara, dan temukan pesan moral yang berharga setiap harinya.
           </p>
  
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
@@ -72,9 +72,9 @@ export default async function Home() {
             <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm">
               🛡️
             </div>
-            <h3 className="text-2xl font-bold text-[var(--base-color-plum-black)]">Pilih Pahlawan</h3>
+            <h3 className="text-2xl font-bold text-[var(--base-color-plum-black)]">Petualangan Cerita</h3>
             <p className="text-[var(--base-color-olive-gray)] font-medium leading-relaxed">
-              Jadilah Ksatria, Peri, atau Penyihir. Setiap pahlawan memiliki misi unik di dunia cerita.
+              Temukan misi-misi unik di setiap cerita dan jadilah pembaca yang hebat di dunia Bacayuk.
             </p>
           </div>
 
@@ -94,7 +94,7 @@ export default async function Home() {
             </div>
             <h3 className="text-2xl font-bold text-[var(--base-color-plum-black)]">Misi & Hadiah</h3>
             <p className="text-[var(--base-color-olive-gray)] font-medium leading-relaxed">
-              Selesaikan misi membaca setiap hari dan kumpulkan lencana pahlawan legendaris.
+              Selesaikan misi membaca setiap hari dan kumpulkan poin prestasi petualanganmu.
             </p>
           </div>
         </div>

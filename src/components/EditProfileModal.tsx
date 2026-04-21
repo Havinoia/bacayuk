@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, User, Image, Shield, Loader2 } from "lucide-react";
+import { X, User, Image, Loader2 } from "lucide-react";
 import { updateProfile } from "@/app/actions/profile";
 
 interface EditProfileModalProps {
@@ -12,23 +12,11 @@ interface EditProfileModalProps {
         name: string;
         image: string | null;
     };
-    hero: {
-        role: string | null;
-    } | null;
 }
 
-const ROLES = [
-    { value: "penyihir", label: "Penyihir (Mage)" },
-    { value: "pemanah", label: "Pemanah (Archer)" },
-    { value: "kesatria", label: "Kesatria (Knight)" },
-    { value: "peri", label: "Peri (Fairy)" },
-    { value: "dwarf", label: "Dwarf (Dwarf)" },
-];
-
-export function EditProfileModal({ isOpen, onClose, user, hero }: EditProfileModalProps) {
+export function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProps) {
     const [name, setName] = useState(user.name);
     const [image, setImage] = useState(user.image || "");
-    const [role, setRole] = useState(hero?.role || "default");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +31,6 @@ export function EditProfileModal({ isOpen, onClose, user, hero }: EditProfileMod
             const result = await updateProfile(user.id, {
                 name,
                 image: image || "",
-                role: role || "default",
             });
 
             if (result.success) {
@@ -116,27 +103,7 @@ export function EditProfileModal({ isOpen, onClose, user, hero }: EditProfileMod
                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Gunakan link gambar untuk mengubah foto profil</p>
                         </div>
 
-                        {/* Role Selection */}
-                        <div className="space-y-2">
-                            <label className="text-[12px] font-black text-[var(--base-color-olive-gray)] uppercase tracking-widest flex items-center gap-2">
-                                <Shield size={14} /> Peran Akademi
-                            </label>
-                            <div className="relative">
-                                <select 
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value)}
-                                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[var(--base-color-pinterest-red)] focus:bg-white outline-none transition-all font-bold text-lg text-[var(--base-color-plum-black)] appearance-none cursor-pointer"
-                                >
-                                    <option value="default">Petualang Biasa</option>
-                                    {ROLES.map((r) => (
-                                        <option key={r.value} value={r.value}>{r.label}</option>
-                                    ))}
-                                </select>
-                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                    <Shield size={18} className="text-slate-300" />
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 

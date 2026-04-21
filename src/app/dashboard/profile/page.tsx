@@ -72,9 +72,8 @@ export default async function ProfilePage() {
                     user={{
                         id: session.user.id,
                         name: session.user.name,
-                        image: session.user.image
+                        image: session.user.image ?? null
                     }}
-                    hero={hero ? { role: hero.role } : null}
                 />
                 <button className="btn-pin-secondary px-6 py-2.5">Bagikan</button>
              </div>

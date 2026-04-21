@@ -9,12 +9,9 @@ interface ProfileEditButtonProps {
         name: string;
         image: string | null;
     };
-    hero: {
-        role: string | null;
-    } | null;
 }
 
-export function ProfileEditButton({ user, hero }: ProfileEditButtonProps) {
+export function ProfileEditButton({ user }: ProfileEditButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -29,7 +26,6 @@ export function ProfileEditButton({ user, hero }: ProfileEditButtonProps) {
                 isOpen={isOpen} 
                 onClose={() => setIsOpen(false)} 
                 user={user} 
-                hero={hero} 
             />
         </>
     );

@@ -73,7 +73,6 @@ export const verification = pgTable("verification", {
 export const heroes = pgTable("heroes", {
   id: serial("id").primaryKey(),
   userId: text("userId").notNull().references(() => user.id).unique(),
-  role: text("role").default("default"), // dwarf, peri, kesatria, penyihir, pemanah
   xp: integer("xp").default(0).notNull(),
   level: integer("level").default(1).notNull(),
   points: integer("points").default(0).notNull(), // Activity Points

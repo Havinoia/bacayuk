@@ -75,7 +75,7 @@ export default async function ProfilePage() {
                         image: session.user.image ?? null
                     }}
                 />
-                <button className="btn-pin-secondary px-6 py-2.5">Bagikan</button>
+
              </div>
           </div>
         </section>

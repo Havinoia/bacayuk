@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fredoka, Outfit } from "next/font/google";
 import "./globals.css";
 
+import { InactivityLogout } from "@/components/auth/InactivityLogout";
+
 const fredoka = Fredoka({
   variable: "--font-fredoka",
   subsets: ["latin"],
@@ -33,7 +35,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground transition-colors duration-500">
-
+        <InactivityLogout />
         {children}
       </body>
     </html>

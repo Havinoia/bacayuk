@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { Mail, Lock, Loader2, ArrowRight, Globe } from "lucide-react";
+import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -108,12 +108,6 @@ export default function LoginPage() {
                     </button>
                 </form>
 
-                <div className="mt-10 pt-10 border-t-4 border-dashed border-slate-50 space-y-8">
-                    <button className="w-full py-5 rounded-full bg-slate-50 border-4 border-transparent hover:border-primary/10 transition-all font-black text-slate-600 flex items-center justify-center gap-3 group active:scale-95">
-                        <Globe size={20} className="group-hover:rotate-[30deg] transition-all" />
-                        <span>Gunakan Google</span>
-                    </button>
-                </div>
             </div>
 
             <p className="text-center mt-10 text-foreground/40 font-black">

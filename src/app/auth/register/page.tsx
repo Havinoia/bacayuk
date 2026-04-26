@@ -91,7 +91,7 @@ export default function RegisterPage() {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="nama@email.com"
+                                placeholder="Email Kamu"
                                 className="w-full pl-14 pr-6 py-5 rounded-full bg-slate-50 border-4 border-transparent focus:border-primary/20 focus:bg-white outline-none transition-all font-black"
                             />
                          </div>

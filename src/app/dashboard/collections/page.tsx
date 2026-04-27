@@ -52,7 +52,6 @@ export default async function CollectionsPage({
   return (
     <div className="space-y-16 pb-20 pt-10 min-h-screen relative">
       {/* Decorative Background Fillers */}
-      <div className="absolute top-20 right-1/4 text-5xl opacity-10 animate-pulse">☁️</div>
       <div className="absolute top-[400px] left-10 text-6xl opacity-10 animate-float">🍄</div>
       <div className="absolute bottom-20 right-10 text-6xl opacity-10 animate-float" style={{ animationDelay: '2s' }}>🌷</div>
 

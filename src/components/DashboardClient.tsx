@@ -9,6 +9,7 @@ import "@/app/dashboard/dashboard.css";
 
 interface DashboardClientProps {
     userName: string;
+    userImage?: string | null;
     completedCount: number;
     totalStories: number;
     allStories: any[];
@@ -19,6 +20,7 @@ interface DashboardClientProps {
 
 export function DashboardClient({ 
     userName, 
+    userImage,
     completedCount, 
     totalStories, 
     allStories, 
@@ -66,7 +68,12 @@ export function DashboardClient({
                 }}
             >
                 <section className="px-6 max-w-7xl mx-auto text-center space-y-12">
-                    <div className="inline-flex px-6 py-2 rounded-full bg-[var(--base-color-warm-wash)] text-[14px] font-black tracking-[0.3em] text-[var(--base-color-olive-gray)] uppercase">
+                    <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[var(--base-color-warm-wash)] text-[14px] font-black tracking-[0.3em] text-[var(--base-color-olive-gray)] uppercase shadow-sm border border-black/5">
+                        {userImage && (
+                            <div className="w-6 h-6 rounded-full overflow-hidden border border-black/10 shrink-0">
+                                <img src={userImage} alt="Profile" className="w-full h-full object-cover" />
+                            </div>
+                        )}
                         Halo Petualang, {userName}
                     </div>
                     

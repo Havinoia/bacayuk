@@ -6,6 +6,8 @@ import { updateProfile } from "@/app/actions/profile";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/lib/image-utils";
 
+import { useRouter } from "next/navigation";
+
 interface EditProfileModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -17,6 +19,7 @@ interface EditProfileModalProps {
 }
 
 export function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProps) {
+    const router = useRouter();
     const [name, setName] = useState(user.name);
     const [image, setImage] = useState(user.image || "");
     const [isLoading, setIsLoading] = useState(false);
@@ -84,6 +87,7 @@ export function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProp
             });
 
             if (result.success) {
+                router.refresh();
                 onClose();
             } else {
                 setError(result.error || "Gagal memperbarui profil");

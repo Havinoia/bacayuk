@@ -109,8 +109,12 @@ export function TopBar({
                         <div className="px-4 py-3 mb-2">
                             <p className="text-[14px] font-medium text-[var(--base-color-olive-gray)]">Akun Anda</p>
                             <div className="flex items-center gap-3 mt-3 p-2 rounded-2xl bg-[var(--base-color-warm-light)]/30 border border-black/5">
-                                <div className="w-10 h-10 rounded-full bg-[var(--base-color-sand-gray)] flex items-center justify-center text-xs font-black">
-                                    {session?.user?.name?.charAt(0) || "U"}
+                                <div className="w-10 h-10 rounded-full bg-[var(--base-color-sand-gray)] flex items-center justify-center text-xs font-black overflow-hidden">
+                                    {session?.user?.image ? (
+                                        <img src={session.user.image} alt="User" className="w-full h-full object-cover" />
+                                    ) : (
+                                        session?.user?.name?.charAt(0) || "U"
+                                    )}
                                 </div>
                                 <div className="overflow-hidden">
                                     <p className="font-bold text-[14px] truncate text-[var(--base-color-plum-black)]">{session?.user?.name}</p>

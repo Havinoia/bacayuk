@@ -55,6 +55,7 @@ export default async function DashboardPage() {
   return (
     <DashboardClient 
       userName={userName.split(' ')[0]}
+      userImage={session.user.image}
       completedCount={completedCount}
       totalStories={totalStories}
       allStories={allStories}

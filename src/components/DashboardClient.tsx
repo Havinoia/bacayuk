@@ -163,7 +163,7 @@ export function DashboardClient({
                             </div>
 
                             <div className="space-y-6">
-                                {userActiveQuests.map((uq) => (
+                                {userActiveQuests.slice(0, 3).map((uq) => (
                                     <Link key={uq.id} href="/dashboard/quests">
                                         <div className={`p-8 rounded-[3rem] flex items-center gap-6 border-2 transition-all group relative overflow-hidden active:scale-95 ${uq.isCompleted ? 'bg-emerald-50 border-emerald-100' : 'bg-white border-black/5 hover:border-[var(--base-color-pinterest-red)] shadow-xl'}`}>
                                             <div className={`w-16 h-16 rounded-[2rem] flex items-center justify-center shrink-0 ${uq.isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>

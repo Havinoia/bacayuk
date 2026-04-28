@@ -22,7 +22,7 @@ export async function ensureDailyQuests(userId: string) {
     });
 
     // If they have quests from today, we are done
-    if (existingQuests.length > 0) return existingQuests;
+    if (existingQuests.length > 0) return existingQuests.slice(0, 3);
 
     // 2. Clear old daily quests if any (prevents clutter)
     // We only delete 'isDaily' quests that were assigned before today
@@ -94,7 +94,7 @@ export async function ensureDailyQuests(userId: string) {
         newAssignments.push({ ...assigned, quest: q });
     }
 
-    return newAssignments;
+    return newAssignments.slice(0, 3);
 }
 
 /**

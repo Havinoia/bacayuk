@@ -67,7 +67,7 @@ export default async function QuestsPage() {
 
         {/* Quests Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {userQuestsWithDetails.map((uq) => {
+            {userQuestsWithDetails.slice(0, 3).map((uq) => {
                 const quest = uq.quest;
                 if (!quest) return null;
                 const progress = Math.min((uq.currentValue / quest.targetValue) * 100, 100);

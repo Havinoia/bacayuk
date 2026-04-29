@@ -22,7 +22,7 @@ export function NotificationDropdown({
     isOpen,
     onToggle
 }: { 
-    initialNotifications: any[],
+    initialNotifications: Notification[],
     userId: string,
     isOpen: boolean,
     onToggle: () => void
@@ -56,7 +56,7 @@ export function NotificationDropdown({
         await markAllAsRead(userId);
     };
 
-    const formatTime = (date: any) => {
+    const formatTime = (date: Date | string) => {
         const d = new Date(date);
         const now = new Date();
         const diffMs = now.getTime() - d.getTime();

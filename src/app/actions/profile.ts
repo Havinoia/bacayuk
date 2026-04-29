@@ -13,7 +13,7 @@ export async function updateProfile(userId: string, data: { name?: string; image
     try {
         // Update user table
         if (data.name !== undefined || data.image !== undefined) {
-            const userUpdate: any = {};
+            const userUpdate: { name?: string; image?: string; updatedAt?: Date } = {};
             if (data.name) userUpdate.name = data.name;
             if (data.image !== undefined) userUpdate.image = data.image;
             userUpdate.updatedAt = new Date();

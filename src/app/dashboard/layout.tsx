@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   }) : null;
 
   // Process Notifications & Reminders (Lazy Check)
-  let notifications: any[] = [];
+  let notifications: Awaited<ReturnType<typeof getNotifications>> = [];
   if (session?.user) {
     await generateInactivityReminders(session.user.id);
     notifications = await getNotifications(session.user.id);

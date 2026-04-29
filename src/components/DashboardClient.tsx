@@ -12,8 +12,8 @@ interface DashboardClientProps {
     userImage?: string | null;
     completedCount: number;
     totalStories: number;
-    allStories: any[];
-    userActiveQuests: any[];
+    allStories: { id: number; title: string; slug: string; thumbnailUrl: string | null; category?: { name: string } | null }[];
+    userActiveQuests: { id: number; isCompleted: boolean; quest: { title: string; type: string; pointsReward: number } }[];
     heroPoints: number;
     bookmarkIds?: number[];
 }

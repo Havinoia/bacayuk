@@ -13,7 +13,7 @@ export function TopBar({
     userId = ""
 }: { 
     initialPoints?: number,
-    initialNotifications?: any[],
+    initialNotifications?: { id: number; title: string; message: string; type: string; link: string | null; isRead: boolean; createdAt: Date | string }[],
     userId?: string
 }) {
     const { data: session } = authClient.useSession();

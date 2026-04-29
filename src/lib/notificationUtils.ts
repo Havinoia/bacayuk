@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { notifications, storyPins, stories } from "@/db/schema";
-import { eq, and, desc, gte, lt } from "drizzle-orm";
+import { notifications, storyPins } from "@/db/schema";
+import { eq, and, desc, gte } from "drizzle-orm";
 
 /**
  * Generates inactivity reminders if the user hasn't continued a story for 5+ hours.

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { quests, userQuests, heroes } from "@/db/schema";
-import { eq, and, sql, lte, gte } from "drizzle-orm";
+import { eq, and, lte, gte } from "drizzle-orm";
 
 /**
  * Checks if a user needs new daily quests and assigns them if so.
@@ -56,7 +56,7 @@ export async function ensureDailyQuests(userId: string) {
 
     // 4. Randomly pick exactly 3 quests with UNIQUE types
     // Group pool by type to ensure variety
-    const groupedByType: Record<string, any[]> = {};
+    const groupedByType: Record<string, typeof dailyPool> = {};
     for (const q of dailyPool) {
         if (!groupedByType[q.type]) groupedByType[q.type] = [];
         groupedByType[q.type].push(q);

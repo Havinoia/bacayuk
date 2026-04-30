@@ -132,17 +132,6 @@ export default async function ProfilePage() {
                     </div>
                  </div>
               </Link>
-              <div className="p-6 rounded-3xl bg-white border-2 border-dashed border-slate-200 opacity-50 cursor-not-allowed">
-                 <div className="flex items-center gap-4">
-                    <div className="p-4 rounded-full bg-slate-100">
-                       <Star size={24} />
-                    </div>
-                    <div>
-                       <p className="font-black text-lg">Koleksi Favorit</p>
-                       <p className="text-sm text-slate-400 font-medium">Segera Hadir...</p>
-                    </div>
-                 </div>
-              </div>
            </div>
         </section>
 

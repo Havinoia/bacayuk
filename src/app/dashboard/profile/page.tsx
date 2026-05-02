@@ -117,7 +117,6 @@ export default async function ProfilePage() {
         <section className="pt-10 border-t border-black/5">
            <div className="flex items-center justify-between mb-8">
               <h3 className="text-2xl font-black text-[var(--base-color-plum-black)]">Aktivitas Membaca</h3>
-              <Link href="/dashboard/collections" className="text-sm font-bold text-[var(--base-color-pinterest-red)] hover:underline">Jelajahi Lagi →</Link>
            </div>
            
            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

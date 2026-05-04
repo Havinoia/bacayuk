@@ -10,6 +10,14 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+    user: {
+        additionalFields: {
+            bio: {
+                type: "string",
+                required: false,
+            }
+        }
+    },
     session: {
         expiresIn: 30 * 60, // 30 minutes
         updateAge: 5 * 60,  // refresh every 5 minutes if active

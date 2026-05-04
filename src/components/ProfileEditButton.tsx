@@ -8,6 +8,7 @@ interface ProfileEditButtonProps {
         id: string;
         name: string;
         image: string | null;
+        bio?: string | null;
     };
 }
 

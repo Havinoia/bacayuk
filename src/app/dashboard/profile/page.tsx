@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
-import { heroes, stories, readingProgress } from "@/db/schema";
+import { heroes, stories, readingProgress, user } from "@/db/schema";
 import { eq, count } from "drizzle-orm";
 import { headers } from "next/headers";
 import { User, Shield, Trophy, BookOpen, Star, Calendar } from "lucide-react";
@@ -33,6 +33,12 @@ export default async function ProfilePage() {
     where: eq(heroes.userId, session.user.id)
   });
 
+  const dbUser = await db.query.user.findFirst({
+    where: eq(user.id, session.user.id)
+  });
+  
+  const bio = dbUser?.bio || "Pembaca setia yang sedang menikmati petualangan ajaib di Bacayuk. Teruslah membaca untuk menemukan lebih banyak pengetahuan!";
+
   return (
     <div className="min-h-screen bg-white pb-20 px-6 pt-10 animate-pin-enter">
       <div className="max-w-4xl mx-auto space-y-12">
@@ -63,8 +69,8 @@ export default async function ProfilePage() {
                 </div>
              </div>
              
-             <p className="text-lg text-[var(--base-color-olive-gray)] font-medium max-w-lg leading-relaxed">
-                Pembaca setia yang sedang menikmati petualangan ajaib di Bacayuk. Teruslah membaca untuk menemukan lebih banyak pengetahuan!
+             <p className="text-lg text-[var(--base-color-olive-gray)] font-medium max-w-lg leading-relaxed whitespace-pre-wrap">
+                {bio}
              </p>
 
              <div className="flex gap-4 justify-center md:justify-start pt-2">
@@ -72,7 +78,8 @@ export default async function ProfilePage() {
                     user={{
                         id: session.user.id,
                         name: session.user.name,
-                        image: session.user.image ?? null
+                        image: session.user.image ?? null,
+                        bio: dbUser?.bio ?? null
                     }}
                 />
 

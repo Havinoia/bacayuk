@@ -15,12 +15,14 @@ interface EditProfileModalProps {
         id: string;
         name: string;
         image: string | null;
+        bio?: string | null;
     };
 }
 
 export function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProps) {
     const router = useRouter();
     const [name, setName] = useState(user.name);
+    const [bio, setBio] = useState(user.bio || "");
     const [image, setImage] = useState(user.image || "");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -84,6 +86,7 @@ export function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProp
             const result = await updateProfile(user.id, {
                 name,
                 image: image || "",
+                bio,
             });
 
             if (result.success) {
@@ -173,6 +176,19 @@ export function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProp
                                         className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[var(--base-color-pinterest-red)] focus:bg-white outline-none transition-all font-bold text-lg text-[var(--base-color-plum-black)]"
                                         placeholder="Masukkan nama..."
                                         required
+                                    />
+                                </div>
+                                {/* Bio Field */}
+                                <div className="space-y-2">
+                                    <label className="text-[12px] font-black text-[var(--base-color-olive-gray)] uppercase tracking-widest flex items-center gap-2">
+                                        <User size={14} /> Deskripsi Profil
+                                    </label>
+                                    <textarea 
+                                        value={bio}
+                                        onChange={(e) => setBio(e.target.value)}
+                                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[var(--base-color-pinterest-red)] focus:bg-white outline-none transition-all font-medium text-lg text-[var(--base-color-plum-black)] resize-none"
+                                        placeholder="Tuliskan sesuatu tentang dirimu..."
+                                        rows={3}
                                     />
                                 </div>
                             </div>
